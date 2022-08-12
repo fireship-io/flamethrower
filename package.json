@@ -1,0 +1,19 @@
+{
+  "name": "flamethrower",
+  "version": "0.0.1",
+  "description": "Blazingly fast SPA-like router for static sites",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "dev": "vite build --watch",
+    "build": "vite build",
+    "serve": "npx serve ./example"
+  },
+  "keywords": [],
+  "author": "Jeff Delaney",
+  "license": "ISC",
+  "devDependencies": {
+    "typescript": "^4.7.4",
+    "vite": "^3.0.7"
+  }
+}
