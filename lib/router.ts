@@ -1,6 +1,11 @@
 import { FlamethrowerOptions, RouteChangeData } from './interfaces';
-import { handleLinkClick, handlePopState, scrollToTop } from './handlers';
-import { mergeHead, formatNextDocument, replaceBody } from './dom';
+import {
+  addToPushState,
+  handleLinkClick,
+  handlePopState,
+  scrollToTop,
+} from './handlers';
+import { mergeHead, formatNextDocument, replaceBody, runScripts } from './dom';
 
 const defaultOpts = {
   log: false,
@@ -9,75 +14,109 @@ const defaultOpts = {
 };
 
 export class Router {
-  enabled = true;
-  prefetched = new Set<string>();
+  public enabled = true;
+  private prefetched = new Set<string>();
 
   constructor(public opts?: FlamethrowerOptions) {
     this.opts = { ...defaultOpts, ...opts };
 
-    if (window.history) {
+    if (window?.history) {
       document.addEventListener('click', (e) => this.onClick(e));
       window.addEventListener('popstate', (e) => this.onPop(e));
     } else {
-      console.warn('flamethrower router not supported by browser');
+      console.warn(
+        'flamethrower router not supported in this browser or environment'
+      );
     }
 
     this.prefetch();
   }
-
+  /**
+   * @param  {string} path
+   * Navigate to a url
+   */
   go(path: string) {
     const prev = window.location.href;
     const next = new URL(path, location.origin).href;
-    return this.replaceDOM({ type: 'go', next, prev });
+    return this.reconstructDOM({ type: 'go', next, prev });
   }
 
-  disable() {
-    this.enabled = false;
+  /**
+   * Navigate back
+   */
+  back() {
+    window.history.back();
   }
 
-  // Finds links on page and prefetches them
+  /**
+   * Navigate forward
+   */
+  forward() {
+    window.history.forward();
+  }
+
+  private log(...args: any[]) {
+    console.log(...args);
+  }
+
+  /**
+   *  Finds links on page and prefetches them
+   */
   private prefetch() {
-    const allLinks = Array.from(document.links)
-      .map((l) => l.href)
-      .filter(
-        (v) =>
-          v.includes(document.location.origin) && // on origin url
-          !v.includes('#') && // not an id anchor
-          v !== (document.location.href || document.location.href + '/') && // not current page
-          !this.prefetched.has(v) // not already prefetched
-      );
+    if (this.opts.prefetch) {
+      const allLinks = Array.from(document.links)
+        .map((l) => l.href)
+        .filter(
+          (v) =>
+            v.includes(document.location.origin) && // on origin url
+            !v.includes('#') && // not an id anchor
+            v !== (document.location.href || document.location.href + '/') && // not current page
+            !this.prefetched.has(v) // not already prefetched
+        );
 
-    allLinks.forEach((url) => {
-      const linkEl = document.createElement('link');
-      linkEl.rel = `prefetch`;
-      linkEl.href = url;
+      allLinks.forEach((url) => {
+        const linkEl = document.createElement('link');
+        linkEl.rel = `prefetch`;
+        linkEl.href = url;
 
-      linkEl.onload = () => this.opts.log && console.log('🌩️ prefetched', url);
-      linkEl.onerror = () =>
-        this.opts.log && console.error("🤕 can't prefetch", url);
+        linkEl.onload = () => this.log('🌩️ prefetched', url);
+        linkEl.onerror = (err) => this.log("🤕 can't prefetch", url, err);
 
-      document.head.appendChild(linkEl);
+        document.head.appendChild(linkEl);
 
-      // Keep track of prefetched links
-      this.prefetched.add(url);
-    });
+        // Keep track of prefetched links
+        this.prefetched.add(url);
+      });
+    }
   }
 
+  /**
+   * @param  {MouseEvent} e
+   * Handle clicks on links
+   */
   private onClick(e: MouseEvent) {
-    if (this.enabled) {
-      this.replaceDOM(handleLinkClick(e));
-    }
+    this.reconstructDOM(handleLinkClick(e));
   }
 
+  /**
+   * @param  {PopStateEvent} e
+   * Handle popstate events like back/forward
+   */
   private onPop(e: PopStateEvent) {
-    if (this.enabled) {
-      this.replaceDOM(handlePopState(e));
-    }
+    this.reconstructDOM(handlePopState(e));
   }
+  /**
+   * @param  {RouteChangeData} routeChangeData
+   * Main process for reconstructing the DOM
+   */
+  private async reconstructDOM({ type, next, prev }: RouteChangeData) {
+    if (!this.enabled) {
+      this.log('router disabled');
+      return;
+    }
 
-  private async replaceDOM({ type, next, prev }: RouteChangeData) {
     try {
-      this.opts.log && console.log('⚡', type);
+      this.log('⚡', type);
 
       // Check type && window href destination
       // Disqualify if fetching same URL
@@ -85,12 +124,14 @@ export class Router {
       if (['popstate', 'link', 'go'].includes(type) && next !== prev) {
         this.opts.log && console.time('⏱️');
 
-        // Get Page
         window.dispatchEvent(new CustomEvent('router:fetch'));
 
+        // Update window history
+        addToPushState(next);
+
+        // Fetch next document
         const res = await fetch(next);
         const html = await res.text();
-
         const nextDoc = formatNextDocument(html);
 
         // Merge HEAD
@@ -103,11 +144,16 @@ export class Router {
           (document as any).createDocumentTransition
         ) {
           const transition = (document as any).createDocumentTransition();
-          transition.start(() => replaceBody(nextDoc));
+          transition.start(() => {
+            replaceBody(nextDoc);
+            runScripts();
+          });
         } else {
           replaceBody(nextDoc);
+          runScripts();
         }
 
+        // handle scroll
         scrollToTop(type);
 
         window.dispatchEvent(new CustomEvent('router:end'));

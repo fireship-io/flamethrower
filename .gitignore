@@ -63,3 +63,8 @@ typings/
 
 # parcel-bundler cache (https://parceljs.org/)
 .cache
+/test-results/
+/playwright-report/
+/playwright/.cache/
+firebase.json
+.firebaserc

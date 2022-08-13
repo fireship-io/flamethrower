@@ -10,26 +10,41 @@
         flamethrower({ log: true, pageTransitions: true });
     </script>
 
-    <script data-reload defer>
-        console.log('✔️ head script with data-reload attr works')
-    </script>
-    <script>console.log('this should NOT run on soft nav')</script>
-
-    <script src="/lib.js"></script>
+    <script defer data-reload src="/script1.js"></script>
+    <script defer src="/script2.js"></script>
 
 </head>
 <body>
     <h1>About</h1>
-    <a href="/">Home</a>
-    <a href="/test">test</a>
-    <a href="#heading">Heading</a>
-    <a href="https://google.com">External</a>
-    <script>
-        console.log('✔️ script in body works');
+    <a href="/">Home</a> | 
+    <a href="/test">Test</a> | 
+    <a href="#heading">Heading</a> | 
+    <a href="https://google.com">External</a> |
+    <button id="go">Go</button>
+    <button id="back">Back</button>
+    <script type="module">
+        const router = window.flamethrower;
+        document.getElementById('go').onclick = () => {
+            router.go('/');
+        };
+
+        document.getElementById('back').onclick = () => router.back();
     </script>
+
+    <h3>Scripts</h3>
+    <p>Scripts from body or head with data-reload attr should always run</p>
+    <p id="bodyCheck"></p>
+    <p id="headCheck"></p>
+    <p id="headCheck2">default text</p>
+
     <div style="margin-top: 1000px;"></div>
     <h3 id="heading">Heading</h3>
     <a href="/">Home</a>
     <div style="margin-top: 1000px;"></div>
+
+    <script>
+        console.log('body script');
+        document.getElementById('bodyCheck').innerText = '✔️ body script works';
+    </script>
 </body>
 </html>

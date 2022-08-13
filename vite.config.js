@@ -8,7 +8,7 @@ export default defineConfig({
     lib: {
       entry: resolve(__dirname, 'lib/main.ts'),
       name: 'Flamethrower',
-      fileName: 'flamethrower',
+      fileName: 'main',
     },
     rollupOptions: {
       // make sure to externalize deps that shouldn't be bundled
@@ -31,7 +31,7 @@ export default defineConfig({
 function copyToExample() {
     return {
       closeBundle: () => {
-        const build = './dist/flamethrower.js';
+        const build = './dist/main.js';
         const example = './example/flamethrower.js';
         copyFileSync(build, example);
         console.log(`copied bundle to example`);

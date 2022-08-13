@@ -2,17 +2,21 @@
   "name": "flamethrower",
   "version": "0.0.1",
   "description": "Blazingly fast SPA-like router for static sites",
-  "main": "index.js",
+  "main": "dist/main.js",
+  "types": "dist/main.d.ts",
   "type": "module",
   "scripts": {
     "dev": "vite build --watch",
-    "build": "vite build",
-    "serve": "npx serve ./example"
+    "build": "vite build && npx tsc --emitDeclarationOnly",
+    "serve": "serve ./example",
+    "test": "playwright test"
   },
   "keywords": [],
   "author": "Jeff Delaney",
   "license": "ISC",
   "devDependencies": {
+    "@playwright/test": "^1.25.0",
+    "serve": "^14.0.1",
     "typescript": "^4.7.4",
     "vite": "^3.0.7"
   }
