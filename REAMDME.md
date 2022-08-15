@@ -22,7 +22,7 @@ This means you can have long-lived JavaScript behaviors between navigations. It 
 ## QuickStart
 
 ```
-npm i flamethrower
+npm i flamethrower-router
 ```
 
 ```js

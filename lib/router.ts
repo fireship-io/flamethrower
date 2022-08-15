@@ -76,14 +76,11 @@ export class Router {
           const url = entry.target.getAttribute('href');
 
           if (this.prefetched.has(url)) {
-            console.log('already prefetched', url);
             observer.unobserve(entry.target);
             return;
           }
 
           if (entry.isIntersecting) {
-            console.log('intersecting', url);
-
             const linkEl = document.createElement('link');
             linkEl.rel = `prefetch`;
             linkEl.href = url;

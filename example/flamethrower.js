@@ -103,11 +103,10 @@ class v {
       o.forEach((c) => {
         const n = c.target.getAttribute("href");
         if (this.prefetched.has(n)) {
-          console.log("already prefetched", n), i.unobserve(c.target);
+          i.unobserve(c.target);
           return;
         }
         if (c.isIntersecting) {
-          console.log("intersecting", n);
           const s = document.createElement("link");
           s.rel = "prefetch", s.href = n, s.as = "document", s.onload = () => this.log("\u{1F329}\uFE0F prefetched", n), s.onerror = (h) => this.log("\u{1F915} can't prefetch", n, h), document.head.appendChild(s), this.prefetched.add(n), i.unobserve(c.target);
         }

@@ -1,5 +1,5 @@
 {
-  "name": "flamethrower",
+  "name": "flamethrower-router",
   "version": "0.0.0-meme.1",
   "description": "Blazingly fast SPA-like router for static sites",
   "main": "dist/main.js",
