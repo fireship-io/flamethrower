@@ -3,15 +3,17 @@
 
 Status: Meme
 
-An 1.5kB zero-config router and prefetcher that makes static sites feel like a blazingly fast SPA.
+An 2kB zero-config router and prefetcher that makes static sites feel like a blazingly fast SPA.
 
 ## Why?
 
-**Problem** Static sites cannot easily share state between pages. This makes it hard to create a good UX with JavaScript libraries because each new page needs to reboot your JS from scratch.
+**Problem** Static sites feel slow and cannot easily share state between pages. This makes it hard to create a good UX with JavaScript libraries because each new page needs to reboot your JS from scratch.
+
+The goal is to make route changes on static sites feel faster, like an SPA, without the need for a frontend framework to take over the entire DOM. 
 
 ## How?
 
-1. It tells the browser to prefetch links in the current page.
+1. It tells the browser to prefetch visible links in the current page with `IntersectionObserver`.
 2. Intercepts click and popstate events, then updates the HTML5 history on route changes.  
 3. Uses `fetch` to get the next page, swaps the `<body>` out, merges the `<head>`, but does not re-exectute head scripts (unless asked to). 
 
@@ -56,19 +58,10 @@ Opt-out of specific links for full page load.
 <a href="/somewhere" data-cold></a>
 ```
 
-Force scripts in the head to run.
+Scripts in `<body>` will run on every page change, but you can force scripts in the `<head>` to run:
 
 ```html
 <script src="..." data-reload></script>
-```
-
-If using Google Analytics, events will need to be sent manually, i.e:
-
-```js
-window.addEventListener('router:end', (e) => {
-    const page_path = new URL(window.history.state['url']).pathname;
-    gtag('config', 'UA-YOUR_ID', { page_path });
-});
 ```
 
 ### Misc
@@ -83,6 +76,5 @@ window.addEventListener('router:end', (e) => {
 
 - `<head>` scripts run only on the first page load. `<body>` scripts will still run on every page change (by design). 
 - It's a good idea to show a global loading bar in case of a slow page load.
-- This library is inspired by [Turbo](https://github.com/hotwired/turbo) Drive, just much lighter. 
-- Google analytics will not be updated on page change, you'll need to listen to `router:end` and send the GA event manually.
+- This library is inspired by [Turbo](https://github.com/hotwired/turbo) Drive. 
 - This project is experimental. 

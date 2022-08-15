@@ -87,7 +87,7 @@ export function handleLinkClick(e: MouseEvent): RouteChangeData {
     const ahref = anchor.getAttribute('href');
     const url = new URL(ahref, location.origin);
 
-    // Start Quick Load
+    // Start router takeover
     e.preventDefault();
 
     // If anchor, scroll,

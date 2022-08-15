@@ -1,5 +1,3 @@
-// console.log('flamethrower init');
-
 import { Router } from './router';
 import { FlamethrowerOptions } from './interfaces';
 

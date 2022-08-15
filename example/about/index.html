@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="The About Page">
+    <meta name="extra" content="test">
     <title>About</title>
     <script defer type="module">
         import flamethrower from '/flamethrower.js';
@@ -13,12 +15,17 @@
     <script defer data-reload src="/script1.js"></script>
     <script defer src="/script2.js"></script>
 
+    <style>
+        #heading {
+            color: blue;
+        }
+    </style>
+
 </head>
 <body>
-    <h1>About</h1>
+    <h1 id="heading">About</h1>
     <a href="/">Home</a> | 
-    <a href="/test">Test</a> | 
-    <a href="#heading">Heading</a> | 
+    <a href="#chapter">Heading</a> | 
     <a href="https://google.com">External</a> |
     <button id="go">Go</button>
     <button id="back">Back</button>
@@ -38,8 +45,10 @@
     <p id="headCheck2">default text</p>
 
     <div style="margin-top: 1000px;"></div>
-    <h3 id="heading">Heading</h3>
+    <h3 id="chapter">Heading</h3>
     <a href="/">Home</a>
+    <a href="/test">Test</a> | 
+
     <div style="margin-top: 1000px;"></div>
 
     <script>

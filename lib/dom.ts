@@ -17,7 +17,6 @@ export function replaceBody(nextDoc: Document) {
   document.body.innerHTML = nextDoc.body.innerHTML;
 }
 
-
 /**
  * @param  {Document} nextDoc
  * Merge new head data
@@ -25,12 +24,28 @@ export function replaceBody(nextDoc: Document) {
 export function mergeHead(nextDoc: Document) {
   const currentHead = document.head;
 
-  // Prevent duplicate prefetching
-  const prefetched = currentHead.querySelectorAll('link[rel="prefetch"]');
-  prefetched.forEach((l) => nextDoc.head.appendChild(l));
-
   // Update head
-  currentHead.innerHTML = nextDoc.head.innerHTML;
+  // Head elements that changed on next document
+  // TODO make this algo more efficient
+  const old = Array.from(document.head.children);
+  const next = Array.from(nextDoc.head.children);
+  const freshNodes = next.filter(
+    (newNode) => !old.find((oldNode) => oldNode.isEqualNode(newNode))
+  );
+  const staleNodes = old.filter(
+    (oldNode) => !next.find((newNode) => newNode.isEqualNode(oldNode))
+  );
+
+  staleNodes.forEach((node) => {
+    if (node.getAttribute('rel') === 'prefetch') {
+      return;
+    }
+    node.remove();
+  });
+
+  freshNodes.forEach((node) => {
+    currentHead.appendChild(node);
+  });
 }
 
 /**

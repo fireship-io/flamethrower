@@ -1,80 +1,88 @@
-function u(e) {
-  ["link", "go"].includes(e) && window.scrollTo({ top: 0 });
+function f(t) {
+  ["link", "go"].includes(t) && window.scrollTo({ top: 0 });
 }
-function c(e) {
-  const t = new URL(e || window.location.href).href;
-  return t.endsWith("/") ? t : `${t}/`;
+function a(t) {
+  const e = new URL(t || window.location.href).href;
+  return e.endsWith("/") ? e : `${e}/`;
 }
-function h(e) {
-  (!window.history.state || window.history.state.url !== e) && window.history.pushState({ url: e }, "internalLink", e);
+function p(t) {
+  (!window.history.state || window.history.state.url !== t) && window.history.pushState({ url: t }, "internalLink", t);
 }
-function f(e) {
-  document.querySelector(e).scrollIntoView({ behavior: "smooth", block: "start" });
+function w(t) {
+  document.querySelector(t).scrollIntoView({ behavior: "smooth", block: "start" });
 }
-function p(e) {
-  const t = c();
-  return { type: "popstate", next: t };
+function m(t) {
+  const e = a();
+  return { type: "popstate", next: e };
 }
-function w(e) {
-  let t;
-  if (e.altKey || e.ctrlKey || e.metaKey || e.shiftKey)
+function g(t) {
+  let e;
+  if (t.altKey || t.ctrlKey || t.metaKey || t.shiftKey)
     return { type: "disqualified" };
-  for (var o = e.target; o.parentNode; o = o.parentNode)
-    if (o.nodeName === "A") {
-      t = o;
+  for (var r = t.target; r.parentNode; r = r.parentNode)
+    if (r.nodeName === "A") {
+      e = r;
       break;
     }
-  if (t && t.host !== location.host)
-    return t.target = "_blank", { type: "external" };
-  if (t && "cold" in (t == null ? void 0 : t.dataset))
+  if (e && e.host !== location.host)
+    return e.target = "_blank", { type: "external" };
+  if (e && "cold" in (e == null ? void 0 : e.dataset))
     return { type: "disqualified" };
-  if (t != null && t.hasAttribute("href")) {
-    const n = t.getAttribute("href"), r = new URL(n, location.origin);
-    if (e.preventDefault(), n != null && n.startsWith("#"))
-      return f(n), { type: "scrolled" };
+  if (e != null && e.hasAttribute("href")) {
+    const o = e.getAttribute("href"), i = new URL(o, location.origin);
+    if (t.preventDefault(), o != null && o.startsWith("#"))
+      return w(o), { type: "scrolled" };
     {
-      const s = c(r.href), i = c();
-      return { type: "link", next: s, prev: i };
+      const c = a(i.href), n = a();
+      return { type: "link", next: c, prev: n };
     }
   } else
     return { type: "noop" };
 }
-function m(e) {
-  var t = new DOMParser();
-  return t.parseFromString(e, "text/html");
+function y(t) {
+  var e = new DOMParser();
+  return e.parseFromString(t, "text/html");
 }
-function a(e) {
-  document.body.innerHTML = e.body.innerHTML;
+function l(t) {
+  document.body.innerHTML = t.body.innerHTML;
 }
-function y(e) {
-  const t = document.head;
-  t.querySelectorAll('link[rel="prefetch"]').forEach((n) => e.head.appendChild(n)), t.innerHTML = e.head.innerHTML;
+function b(t) {
+  const e = document.head, r = Array.from(document.head.children), o = Array.from(t.head.children), i = o.filter(
+    (n) => !r.find((s) => s.isEqualNode(n))
+  );
+  r.filter(
+    (n) => !o.find((s) => s.isEqualNode(n))
+  ).forEach((n) => {
+    n.getAttribute("rel") !== "prefetch" && n.remove();
+  }), i.forEach((n) => {
+    e.appendChild(n);
+  });
 }
-function l() {
+function d() {
   Array.from(
     document.head.querySelectorAll("[data-reload]")
-  ).forEach(d), Array.from(document.body.querySelectorAll("script")).forEach(d);
+  ).forEach(u), Array.from(document.body.querySelectorAll("script")).forEach(u);
 }
-async function d(e) {
-  const t = document.createElement("script"), o = Array.from(e.attributes);
-  for (const { name: n, value: r } of o)
-    t.setAttribute(n, r);
-  t.appendChild(document.createTextNode(e.innerHTML)), e.parentNode.replaceChild(t, e);
+async function u(t) {
+  const e = document.createElement("script"), r = Array.from(t.attributes);
+  for (const { name: o, value: i } of r)
+    e.setAttribute(o, i);
+  e.appendChild(document.createTextNode(t.innerHTML)), t.parentNode.replaceChild(e, t);
 }
-const g = {
+const E = {
   log: !1,
   prefetch: !0,
   pageTransitions: !1
 };
-class E {
-  constructor(t) {
-    this.opts = t, this.enabled = !0, this.prefetched = /* @__PURE__ */ new Set(), this.opts = { ...g, ...t }, window != null && window.history ? (document.addEventListener("click", (o) => this.onClick(o)), window.addEventListener("popstate", (o) => this.onPop(o))) : console.warn(
+class v {
+  constructor(e) {
+    this.opts = e, this.enabled = !0, this.prefetched = /* @__PURE__ */ new Set(), this.opts = { ...E, ...e }, window != null && window.history ? (document.addEventListener("click", (r) => this.onClick(r)), window.addEventListener("popstate", (r) => this.onPop(r)), this.prefetch()) : (console.warn(
       "flamethrower router not supported in this browser or environment"
-    ), this.prefetch();
+    ), this.enabled = !1);
   }
-  go(t) {
-    const o = window.location.href, n = new URL(t, location.origin).href;
-    return this.reconstructDOM({ type: "go", next: n, prev: o });
+  go(e) {
+    const r = window.location.href, o = new URL(e, location.origin).href;
+    return this.reconstructDOM({ type: "go", next: o, prev: r });
   }
   back() {
     window.history.back();
@@ -82,45 +90,62 @@ class E {
   forward() {
     window.history.forward();
   }
-  log(...t) {
-    console.log(...t);
+  log(...e) {
+    console.log(...e);
   }
   prefetch() {
-    this.opts.prefetch && Array.from(document.links).map((o) => o.href).filter(
-      (o) => o.includes(document.location.origin) && !o.includes("#") && o !== (document.location.href || document.location.href + "/") && !this.prefetched.has(o)
-    ).forEach((o) => {
-      const n = document.createElement("link");
-      n.rel = "prefetch", n.href = o, n.onload = () => this.log("\u{1F329}\uFE0F prefetched", o), n.onerror = (r) => this.log("\u{1F915} can't prefetch", o, r), document.head.appendChild(n), this.prefetched.add(o);
-    });
+    const e = {
+      root: null,
+      rootMargin: "0px",
+      threshold: 1
+    };
+    this.opts.prefetch && "IntersectionObserver" in window && (this.observer || (this.observer = new IntersectionObserver((o, i) => {
+      o.forEach((c) => {
+        const n = c.target.getAttribute("href");
+        if (this.prefetched.has(n)) {
+          console.log("already prefetched", n), i.unobserve(c.target);
+          return;
+        }
+        if (c.isIntersecting) {
+          console.log("intersecting", n);
+          const s = document.createElement("link");
+          s.rel = "prefetch", s.href = n, s.as = "document", s.onload = () => this.log("\u{1F329}\uFE0F prefetched", n), s.onerror = (h) => this.log("\u{1F915} can't prefetch", n, h), document.head.appendChild(s), this.prefetched.add(n), i.unobserve(c.target);
+        }
+      });
+    }, e)), Array.from(document.links).filter(
+      (o) => o.href.includes(document.location.origin) && !o.href.includes("#") && o.href !== (document.location.href || document.location.href + "/") && !this.prefetched.has(o.href)
+    ).forEach((o) => this.observer.observe(o)));
   }
-  onClick(t) {
-    this.reconstructDOM(w(t));
+  onClick(e) {
+    this.reconstructDOM(g(e));
   }
-  onPop(t) {
-    this.reconstructDOM(p());
+  onPop(e) {
+    this.reconstructDOM(m());
   }
-  async reconstructDOM({ type: t, next: o, prev: n }) {
+  async reconstructDOM({ type: e, next: r, prev: o }) {
     if (!this.enabled) {
       this.log("router disabled");
       return;
     }
     try {
-      if (this.log("\u26A1", t), ["popstate", "link", "go"].includes(t) && o !== n) {
-        this.opts.log && console.time("\u23F1\uFE0F"), window.dispatchEvent(new CustomEvent("router:fetch")), h(o);
-        const s = await (await fetch(o)).text(), i = m(s);
-        y(i), this.opts.pageTransitions && document.createDocumentTransition ? document.createDocumentTransition().start(() => {
-          a(i), l();
-        }) : (a(i), l()), u(t), window.dispatchEvent(new CustomEvent("router:end")), this.prefetch(), this.opts.log && console.timeEnd("\u23F1\uFE0F");
+      if (this.log("\u26A1", e), ["popstate", "link", "go"].includes(e) && r !== o) {
+        this.opts.log && console.time("\u23F1\uFE0F"), window.dispatchEvent(new CustomEvent("router:fetch")), p(r);
+        const c = await (await fetch(r)).text(), n = y(c);
+        b(n), this.opts.pageTransitions && document.createDocumentTransition ? document.createDocumentTransition().start(() => {
+          l(n), d();
+        }) : (l(n), d()), f(e), window.dispatchEvent(new CustomEvent("router:end")), setTimeout(() => {
+          this.prefetch();
+        }, 200), this.opts.log && console.timeEnd("\u23F1\uFE0F");
       }
-    } catch (r) {
-      return window.dispatchEvent(new CustomEvent("router:error", r)), this.opts.log && console.timeEnd("\u23F1\uFE0F"), console.error("\u{1F4A5} router fetch failed", r), !1;
+    } catch (i) {
+      return window.dispatchEvent(new CustomEvent("router:error", i)), this.opts.log && console.timeEnd("\u23F1\uFE0F"), console.error("\u{1F4A5} router fetch failed", i), !1;
     }
   }
 }
-const b = (e) => {
-  const t = new E(e);
-  return e.log && console.log("\u{1F525} flamethrower engaged"), window && (window.flamethrower = t), t;
+const k = (t) => {
+  const e = new v(t);
+  return t.log && console.log("\u{1F525} flamethrower engaged"), window && (window.flamethrower = e), e;
 };
 export {
-  b as default
+  k as default
 };
