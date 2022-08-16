@@ -1,0 +1,43 @@
+{
+  "files.exclude": {
+    "**/node_modules": true,
+    "package-lock.json": true
+  },
+
+  "workbench.editor.enablePreview": false,
+
+  "eslint.validate": ["javascript", "typescript"],
+
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+
+  "[javascript]": {
+    "editor.codeActionsOnSave": {
+      "source.fixAll.eslint": true
+    }
+  },
+
+  "[typescript]": {
+    "editor.formatOnSave": false,
+    "editor.codeActionsOnSave": {
+      "source.fixAll.eslint": true
+    }
+  },
+
+  "[json]": {
+    "editor.quickSuggestions": {
+      "strings": true
+    },
+    "editor.suggest.insertMode": "replace"
+  },
+
+  "editor.renderWhitespace": "boundary",
+  "editor.formatOnSave": true,
+  "editor.wordWrap": "on",
+  "editor.tabSize": 2,
+
+  "files.eol": "\n",
+
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": true
+  }
+}
