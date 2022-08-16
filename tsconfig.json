@@ -1,15 +1,15 @@
 {
-    "compilerOptions": {
-      "target": "es5",
-      "lib": ["esnext", "dom"],
-      "module": "esnext",
-      "moduleResolution": "node",
-      "declaration": true,
-      "noImplicitAny": false,
-      "sourceMap": false,
-      "inlineSources": false,
-      "types": [],
-      "outDir": "dist"
-    },
-    "include": ["lib/**/*"]
+  "compilerOptions": {
+    "target": "es5",
+    "lib": ["esnext", "dom"],
+    "module": "esnext",
+    "moduleResolution": "node",
+    "declaration": true,
+    "noImplicitAny": false,
+    "sourceMap": false,
+    "inlineSources": false,
+    "types": [],
+    "outDir": "dist"
+  },
+  "include": ["lib/**/*"]
 }
