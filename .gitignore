@@ -68,3 +68,4 @@ typings/
 /playwright/.cache/
 firebase.json
 .firebaserc
+/.firebase/
