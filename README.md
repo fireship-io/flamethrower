@@ -3,11 +3,11 @@
 
 Status: Meme
 
-A 2kB zero-config router and prefetcher that makes a stati site feel like a blazingly fast SPA.
+A 2kB zero-config router and prefetcher that makes a static site feel like a blazingly fast SPA.
 
 ## Why?
 
-**Problem** Static sites feel slow and cannot easily share state between pages. This makes it hard to create a good UX with JavaScript libraries because each new page needs to reboot your JS from scratch.
+**Problem:** Static sites feel slow and cannot easily share state between pages. This makes it hard to create a good UX with JavaScript libraries because each new page needs to reboot your JS from scratch.
 
 The goal is to make route changes on static sites feel faster, like an SPA, without the need for a frontend framework to take over the entire DOM. 
 
