@@ -26,7 +26,7 @@ npm i flamethrower-router
 ```
 
 ```js
-import flamethrower from 'flamethrower';
+import flamethrower from 'flamethrower-router';
 const router = flamethrower();
 ```
 
