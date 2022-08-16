@@ -10,8 +10,8 @@ import { mergeHead, formatNextDocument, replaceBody, runScripts } from './dom';
 const defaultOpts = {
   log: false,
   prefetch: true,
-  pageTransitions: false,
-  prefetchOnHover: false
+  prefetchOnHover: false,
+  pageTransitions: false
 };
 
 export class Router {
