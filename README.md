@@ -3,7 +3,7 @@
 
 Status: Meme
 
-An 2kB zero-config router and prefetcher that makes static sites feel like a blazingly fast SPA.
+A 2kB zero-config router and prefetcher that makes static sites feel like a blazingly fast SPA.
 
 ## Why?
 
@@ -70,7 +70,7 @@ Scripts in `<body>` will run on every page change, but you can force scripts in 
 
 **Does it work with Next.js?** No, any framework that fully hydrates to an SPA does not need this - you already have a client-side router. 
 
-**Does it work with Astro** I think so. It can share state between routes, but partially hydrated components may flash between routes.
+**Does it work with Astro?** I think so. It can share state between routes, but partially hydrated components may flash between routes.
 
 **Other things to know:**
 
