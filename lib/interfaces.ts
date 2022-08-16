@@ -1,6 +1,7 @@
 export interface FlamethrowerOptions {
     log?: boolean;
     prefetch?: boolean,
+    prefetchOnHover?: boolean,
     pageTransitions?: boolean,
   }
   

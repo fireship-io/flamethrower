@@ -11,6 +11,7 @@ const defaultOpts = {
   log: false,
   prefetch: true,
   pageTransitions: false,
+  prefetchOnHover: false
 };
 
 export class Router {
@@ -81,18 +82,7 @@ export class Router {
           }
 
           if (entry.isIntersecting) {
-            const linkEl = document.createElement('link');
-            linkEl.rel = `prefetch`;
-            linkEl.href = url;
-            linkEl.as = 'document';
-
-            linkEl.onload = () => this.log('🌩️ prefetched', url);
-            linkEl.onerror = (err) => this.log("🤕 can't prefetch", url, err);
-
-            document.head.appendChild(linkEl);
-
-            // Keep track of prefetched links
-            this.prefetched.add(url);
+            this.createLink(url);
             observer.unobserve(entry.target);
           }
         });
@@ -107,8 +97,39 @@ export class Router {
           !this.prefetched.has(node.href) // not already prefetched
       );
 
-      allLinks.forEach((node) => this.observer.observe(node));
+      if (this.opts.prefetchOnHover) {
+        allLinks.forEach((node) => {
+          node.addEventListener('mouseenter', () => {
+            const url = node.getAttribute('href');
+            if (this.prefetched.has(url)) {
+              return;
+            }
+            this.createLink(url);
+          })
+        }, { once: true });
+      } else {
+        allLinks.forEach((node) => this.observer.observe(node));
+      }
     }
+  }
+
+  /**
+   * @param  {string} url
+   * Create a link to prefetch
+   */
+  private createLink(url: string) {
+    const linkEl = document.createElement('link');
+    linkEl.rel = `prefetch`;
+    linkEl.href = url;
+    linkEl.as = 'document';
+
+    linkEl.onload = () => this.log('🌩️ prefetched', url);
+    linkEl.onerror = (err) => this.log("🤕 can't prefetch", url, err);
+
+    document.head.appendChild(linkEl);
+
+    // Keep track of prefetched links
+    this.prefetched.add(url);
   }
 
   /**
