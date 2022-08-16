@@ -66,7 +66,7 @@ Scripts in `<body>` will run on every page change, but you can force scripts in 
 
 ### Misc
 
-**Supported in all browsers?** Yes. It will fallback to standard naviation if `window.history` does not exist. 
+**Supported in all browsers?** Yes. It will fallback to standard navigation if `window.history` does not exist. 
 
 **Does it work with Next.js?** No, any framework that fully hydrates to an SPA does not need this - you already have a client-side router. 
 
