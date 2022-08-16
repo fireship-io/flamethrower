@@ -57,7 +57,7 @@ export class Router {
   }
 
   private log(...args: any[]) {
-    console.log(...args);
+    this.opts.log && console.log(...args);
   }
 
   /**
