@@ -3,7 +3,7 @@
 
 Status: Meme
 
-A 2kB zero-config router and prefetcher that makes static sites feel like a blazingly fast SPA.
+A 2kB zero-config router and prefetcher that makes a stati site feel like a blazingly fast SPA.
 
 ## Why?
 
