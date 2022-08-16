@@ -65,7 +65,7 @@ export function runScripts() {
   bodyScripts.forEach(replaceAndRunScript);
 }
 
-// Private helper to reexecute scripts
+// Private helper to re-execute scripts
 async function replaceAndRunScript(oldScript: HTMLScriptElement) {
   const newScript = document.createElement('script');
   const attrs = Array.from(oldScript.attributes);

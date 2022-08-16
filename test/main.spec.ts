@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { expect, test } from '@playwright/test';
 
 test('basic navigation works', async ({ page }) => {
 
@@ -33,7 +33,7 @@ test('only valid scripts should run', async ({ page }) => {
 });
 
 
-test('navigate programatically', async ({ page }) => {
+test('navigate programmatically', async ({ page }) => {
 
   await page.goto('http://localhost:3000');
   const about = page.locator('#about');
@@ -47,7 +47,7 @@ test('navigate programatically', async ({ page }) => {
 });
 
 
-test('metatags are added and removed', async ({ page }) => {
+test('meta tags are added and removed', async ({ page }) => {
 
   await page.goto('http://localhost:3000');
   const about = page.locator('#about');
@@ -88,7 +88,7 @@ test('prefetching works', async ({ page }) => {
   let testPre = page.locator('link[href="/test"]');
   await expect(testPre).toHaveCount(0)
 
-  // Validate instersection observer works
+  // Validate intersection observer works
   const heading = page.locator('#chapter');
   await heading.click();
 

@@ -39,5 +39,12 @@
 
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": true
-  }
+  },
+  "cSpell.words": [
+        "Fireship",
+        "msedge",
+        "popstate",
+        "prefetcher",
+        "viewports"
+   ]
 }

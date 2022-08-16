@@ -3,7 +3,7 @@
 
 Status: Meme
 
-An 2kB zero-config router and prefetcher that makes static sites feel like a blazingly fast SPA.
+A 2kB zero-config router and prefetcher that makes static sites feel like a blazingly fast SPA.
 
 ## Why?
 
@@ -15,7 +15,7 @@ The goal is to make route changes on static sites feel faster, like an SPA, with
 
 1. It tells the browser to prefetch visible links in the current page with `IntersectionObserver`.
 2. Intercepts click and popstate events, then updates the HTML5 history on route changes.  
-3. Uses `fetch` to get the next page, swaps the `<body>` out, merges the `<head>`, but does not re-exectute head scripts (unless asked to). 
+3. Uses `fetch` to get the next page, swaps the `<body>` out, merges the `<head>`, but does not re-execute head scripts (unless asked to). 
 
 This means you can have long-lived JavaScript behaviors between navigations. It works especially well with native web components. 
 
@@ -66,11 +66,11 @@ Scripts in `<body>` will run on every page change, but you can force scripts in 
 
 ### Misc
 
-**Supported in all browsers?** Yes. It will fallback to standard naviation if `window.history` does not exist. 
+**Supported in all browsers?** Yes. It will fallback to standard navigation if `window.history` does not exist. 
 
 **Does it work with Next.js?** No, any framework that fully hydrates to an SPA does not need this - you already have a client-side router. 
 
-**Does it work with Astro** I think so. It can share state between routes, but partially hydrated components may flash between routes.
+**Does it work with Astro?** I think so. It can share state between routes, but partially hydrated components may flash between routes.
 
 **Other things to know:**
 
