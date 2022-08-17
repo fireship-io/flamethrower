@@ -68,7 +68,7 @@ function k(e, t) {
       n.splice(u, 1), i++;
       continue;
     }
-    n.push(r), o.push(c), s++, i++;
+    r && n.push(r), c && o.push(c), s++, i++;
   }
   return { staleNodes: n, freshNodes: o };
 }

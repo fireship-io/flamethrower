@@ -58,8 +58,8 @@ function partitionNodes(oldNodes: Element[], nextNodes: Element[]): PartitionedN
       nextMark++;
       continue;
     }
-    staleNodes.push(old);
-    freshNodes.push(next);
+    old && staleNodes.push(old);
+    next && freshNodes.push(next);
     oldMark++;
     nextMark++;
   }
