@@ -3,19 +3,19 @@
 
 Status: Meme
 
-A 2kB zero-config router and prefetcher that makes a stati site feel like a blazingly fast SPA.
+A 2kB zero-config router and prefetcher that makes a static site feel like a blazingly fast SPA.
 
 ## Why?
 
-**Problem** Static sites feel slow and cannot easily share state between pages. This makes it hard to create a good UX with JavaScript libraries because each new page needs to reboot your JS from scratch.
+**Problem** Static sites feel slow and cannot easily share state between pages. This makes it hard to create compelling UX with JavaScript libraries, because each new page needs to reboot your JS from scratch.
 
 The goal is to make route changes on static sites feel faster, like an SPA, without the need for a frontend framework to take over the entire DOM. 
 
 ## How?
 
 1. It tells the browser to prefetch visible links in the current page with `IntersectionObserver`.
-2. Intercepts click and popstate events, then updates the HTML5 history on route changes.  
-3. Uses `fetch` to get the next page, swaps the `<body>` out, merges the `<head>`, but does not re-execute head scripts (unless asked to). 
+2. Intercepts click and popstate events, then updates the HTML5 history on route changes.
+3. Uses `fetch` to get the next page, swaps the `<body>` out, merges the `<head>`, but does not re-execute head scripts (unless asked to).
 
 This means you can have long-lived JavaScript behaviors between navigations. It works especially well with native web components. 
 
