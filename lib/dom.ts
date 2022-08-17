@@ -23,15 +23,58 @@ export function mergeHead(nextDoc: Document): void {
   // Update head
   // Head elements that changed on next document
   // TODO make this algo more efficient
-  const old = Array.from(document.querySelectorAll('head>:not([rel="prefetch"]'));
-  const next = Array.from(nextDoc.head.children);
-  const freshNodes = next.filter((newNode) => !old.find((oldNode) => oldNode.isEqualNode(newNode)));
-  const staleNodes = old.filter((oldNode) => !next.find((newNode) => newNode.isEqualNode(oldNode)));
+  const getValidNodes = (doc: Document): Element[] => Array.from(doc.querySelectorAll('head>:not([rel="prefetch"]'));
+  const oldNodes = getValidNodes(document);
+  const nextNodes = getValidNodes(nextDoc);
+
+  const { staleNodes, freshNodes } = partitionNodes(oldNodes, nextNodes);
 
   staleNodes.forEach((node) => node.remove());
 
   document.head.append(...freshNodes);
 }
+
+function partitionNodes(oldNodes: Element[], nextNodes: Element[]): PartitionedNodes {
+  /* const freshNodes = nextNodes.filter((newNode) => !oldNodes.find((oldNode) => oldNode.isEqualNode(newNode)));
+  const staleNodes = oldNodes.filter((oldNode) => !nextNodes.find((newNode) => newNode.isEqualNode(oldNode))); */
+
+  const staleNodes: Element[] = [];
+  const freshNodes: Element[] = [];
+  let oldMark = 0;
+  let nextMark = 0;
+  while (oldMark < oldNodes.length && nextMark < nextNodes.length) {
+    const old = oldNodes[oldMark];
+    const next = nextNodes[nextMark];
+    if (old.isEqualNode(next)) {
+      oldMark++;
+      nextMark++;
+      continue;
+    }
+    const oldInFresh = freshNodes.findIndex((node) => node.isEqualNode(old));
+    if (oldInFresh !== -1) {
+      freshNodes.splice(oldInFresh, 1);
+      oldMark++;
+      continue;
+    }
+    const nextInStale = staleNodes.findIndex((node) => node.isEqualNode(next));
+    if (nextInStale !== -1) {
+      staleNodes.splice(nextInStale, 1);
+      nextMark++;
+      continue;
+    }
+    staleNodes.push(old);
+    freshNodes.push(next);
+    oldMark++;
+    nextMark++;
+  }
+
+  return { staleNodes, freshNodes };
+}
+
+type PartitionedNodes = {
+  freshNodes: Element[];
+  staleNodes: Element[];
+};
 
 /**
  * Runs JS in the fetched document
