@@ -29,11 +29,11 @@ function g(e) {
   if (t && "cold" in (t == null ? void 0 : t.dataset))
     return { type: "disqualified" };
   if (t != null && t.hasAttribute("href")) {
-    const o = t.getAttribute("href"), i = new URL(o, location.origin);
+    const o = t.getAttribute("href"), s = new URL(o, location.href);
     if (e.preventDefault(), o != null && o.startsWith("#"))
       return w(o), { type: "scrolled" };
     {
-      const c = a(i.href), n = a();
+      const c = a(s.href), n = a();
       return { type: "link", next: c, prev: n };
     }
   } else
@@ -47,26 +47,26 @@ function l(e) {
   document.body.innerHTML = e.body.innerHTML;
 }
 function b(e) {
-  const t = document.head, r = Array.from(document.head.children), o = Array.from(e.head.children), i = o.filter(
-    (n) => !r.find((s) => s.isEqualNode(n))
+  const t = document.head, r = Array.from(document.head.children), o = Array.from(e.head.children), s = o.filter(
+    (n) => !r.find((i) => i.isEqualNode(n))
   );
   r.filter(
-    (n) => !o.find((s) => s.isEqualNode(n))
+    (n) => !o.find((i) => i.isEqualNode(n))
   ).forEach((n) => {
     n.getAttribute("rel") !== "prefetch" && n.remove();
-  }), i.forEach((n) => {
+  }), s.forEach((n) => {
     t.appendChild(n);
   });
 }
 function d() {
   Array.from(
     document.head.querySelectorAll("[data-reload]")
-  ).forEach(u), Array.from(document.body.querySelectorAll("script")).forEach(u);
+  ).forEach(h), Array.from(document.body.querySelectorAll("script")).forEach(h);
 }
-async function u(e) {
+async function h(e) {
   const t = document.createElement("script"), r = Array.from(e.attributes);
-  for (const { name: o, value: i } of r)
-    t.setAttribute(o, i);
+  for (const { name: o, value: s } of r)
+    t.setAttribute(o, s);
   t.appendChild(document.createTextNode(e.innerHTML)), e.parentNode.replaceChild(t, e);
 }
 const E = {
@@ -99,16 +99,16 @@ class v {
       rootMargin: "0px",
       threshold: 1
     };
-    this.opts.prefetch && "IntersectionObserver" in window && (this.observer || (this.observer = new IntersectionObserver((o, i) => {
+    this.opts.prefetch && "IntersectionObserver" in window && (this.observer || (this.observer = new IntersectionObserver((o, s) => {
       o.forEach((c) => {
         const n = c.target.getAttribute("href");
         if (this.prefetched.has(n)) {
-          i.unobserve(c.target);
+          s.unobserve(c.target);
           return;
         }
         if (c.isIntersecting) {
-          const s = document.createElement("link");
-          s.rel = "prefetch", s.href = n, s.as = "document", s.onload = () => this.log("\u{1F329}\uFE0F prefetched", n), s.onerror = (h) => this.log("\u{1F915} can't prefetch", n, h), document.head.appendChild(s), this.prefetched.add(n), i.unobserve(c.target);
+          const i = document.createElement("link");
+          i.rel = "prefetch", i.href = n, i.as = "document", i.onload = () => this.log("\u{1F329}\uFE0F prefetched", n), i.onerror = (u) => this.log("\u{1F915} can't prefetch", n, u), document.head.appendChild(i), this.prefetched.add(n), s.unobserve(c.target);
         }
       });
     }, t)), Array.from(document.links).filter(
@@ -136,8 +136,8 @@ class v {
           this.prefetch();
         }, 200), this.opts.log && console.timeEnd("\u23F1\uFE0F");
       }
-    } catch (i) {
-      return window.dispatchEvent(new CustomEvent("router:error", i)), this.opts.log && console.timeEnd("\u23F1\uFE0F"), console.error("\u{1F4A5} router fetch failed", i), !1;
+    } catch (s) {
+      return window.dispatchEvent(new CustomEvent("router:error", s)), this.opts.log && console.timeEnd("\u23F1\uFE0F"), console.error("\u{1F4A5} router fetch failed", s), !1;
     }
   }
 }
