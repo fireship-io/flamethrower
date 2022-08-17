@@ -69,3 +69,4 @@ typings/
 firebase.json
 .firebaserc
 /.firebase/
+/example/flamethrower.js
