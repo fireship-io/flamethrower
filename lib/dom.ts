@@ -22,7 +22,6 @@ export function replaceBody(nextDoc: Document): void {
 export function mergeHead(nextDoc: Document): void {
   // Update head
   // Head elements that changed on next document
-  // TODO make this algo more efficient
   const getValidNodes = (doc: Document): Element[] => Array.from(doc.querySelectorAll('head>:not([rel="prefetch"]'));
   const oldNodes = getValidNodes(document);
   const nextNodes = getValidNodes(nextDoc);
@@ -35,9 +34,6 @@ export function mergeHead(nextDoc: Document): void {
 }
 
 function partitionNodes(oldNodes: Element[], nextNodes: Element[]): PartitionedNodes {
-  /* const freshNodes = nextNodes.filter((newNode) => !oldNodes.find((oldNode) => oldNode.isEqualNode(newNode)));
-  const staleNodes = oldNodes.filter((oldNode) => !nextNodes.find((newNode) => newNode.isEqualNode(oldNode))); */
-
   const staleNodes: Element[] = [];
   const freshNodes: Element[] = [];
   let oldMark = 0;
