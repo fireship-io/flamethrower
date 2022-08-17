@@ -9,8 +9,6 @@ import { mergeHead, formatNextDocument, replaceBody, runScripts } from './dom';
 
 const defaultOpts = {
   log: false,
-  prefetch: true,
-  prefetchOnHover: false,
   pageTransitions: false
 };
 
@@ -33,6 +31,7 @@ export class Router {
       this.enabled = false;
     }
   }
+
   /**
    * @param  {string} path
    * Navigate to a url
@@ -57,21 +56,58 @@ export class Router {
     window.history.forward();
   }
 
+  /**
+   * Find all links on page
+   */
+  private get allLinks() {
+    return Array.from(document.links).filter(
+      (node) =>
+        node.href.includes(document.location.origin) && // on origin url
+        !node.href.includes('#') && // not an id anchor
+        node.href !==
+          (document.location.href || document.location.href + '/') && // not current page
+        !this.prefetched.has(node.href) // not already prefetched
+    );
+  }
+
   private log(...args: any[]) {
     this.opts.log && console.log(...args);
   }
 
   /**
-   *  Finds links on page and prefetches them
+   *  Check if the route is qualified for prefetching and prefetch it with chosen method
    */
   private prefetch() {
+    if (this.opts.prefetch === 'visible') {
+      this.prefetchVisible();
+    } else if (this.opts.prefetch === 'hover') {
+      this.prefetchOnHover();
+    } else {
+      return;
+    }
+  }
+
+  /**
+   *  Finds links on page and prefetches them on hover
+   */
+  private prefetchOnHover() {
+    this.allLinks.forEach((node) =>  {
+      const url = node.getAttribute('href');
+      node.addEventListener('mouseenter', () => this.createLink(url), {once: true});
+    })
+  }
+
+  /**
+   *  Prefetch all visible links
+   */
+  private prefetchVisible() {
     const intersectionOpts = {
       root: null,
       rootMargin: '0px',
       threshold: 1.0,
     };
 
-    if (this.opts.prefetch && 'IntersectionObserver' in window) {
+    if ('IntersectionObserver' in window) {
       this.observer ||= new IntersectionObserver((entries, observer) => {
         entries.forEach((entry) => {
           const url = entry.target.getAttribute('href');
@@ -87,29 +123,7 @@ export class Router {
           }
         });
       }, intersectionOpts);
-
-      const allLinks = Array.from(document.links).filter(
-        (node) =>
-          node.href.includes(document.location.origin) && // on origin url
-          !node.href.includes('#') && // not an id anchor
-          node.href !==
-            (document.location.href || document.location.href + '/') && // not current page
-          !this.prefetched.has(node.href) // not already prefetched
-      );
-
-      if (this.opts.prefetchOnHover) {
-        allLinks.forEach((node) => {
-          node.addEventListener('mouseenter', () => {
-            const url = node.getAttribute('href');
-            if (this.prefetched.has(url)) {
-              return;
-            }
-            this.createLink(url);
-          })
-        }, { once: true });
-      } else {
-        allLinks.forEach((node) => this.observer.observe(node));
-      }
+      this.allLinks.forEach((node) => this.observer.observe(node));
     }
   }
 
