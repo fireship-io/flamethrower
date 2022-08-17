@@ -16,7 +16,7 @@ export function scrollToTop(type: string) {
  */
 export function fullURL(url?: string) {
   const href = new URL(url || window.location.href).href;
-  return href.endsWith('/') ? href : `${href}/`;
+  return href.endsWith('/') || href.includes('.') ? href : `${href}/`;
 }
 
 /**
@@ -31,9 +31,7 @@ export function addToPushState(url: string) {
 
 // Smooth stroll to anchor link
 export function scrollToAnchor(anchor) {
-  document
-    .querySelector(anchor)
-    .scrollIntoView({ behavior: 'smooth', block: 'start' });
+  document.querySelector(anchor).scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
 /**
@@ -60,11 +58,7 @@ export function handleLinkClick(e: MouseEvent): RouteChangeData {
   }
 
   // Find element containing href
-  for (
-    var n = e.target as HTMLElement;
-    n.parentNode;
-    n = n.parentNode as HTMLElement
-  ) {
+  for (let n = e.target as HTMLElement; n.parentNode; n = n.parentNode as HTMLElement) {
     if (n.nodeName === 'A') {
       anchor = n as HTMLAnchorElement;
       break;
