@@ -150,7 +150,7 @@ export class Router {
         addToPushState(next);
 
         // Fetch next document
-        const res = await fetch(next);
+        const res = await fetch(next, { headers: { 'X-Flamethrower': '1' } });
         const html = await res.text();
         const nextDoc = formatNextDocument(html);
 
