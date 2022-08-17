@@ -93,7 +93,8 @@ export class Router {
   private prefetchOnHover() {
     this.allLinks.forEach((node) =>  {
       const url = node.getAttribute('href');
-      node.addEventListener('mouseenter', () => this.createLink(url), {once: true});
+      // Using `pointerenter` instead of `mouseenter` to support touch devices hover behavior, PS: `pointerenter` event fires only once
+      node.addEventListener('pointerenter', () => this.createLink(url), {once: true});
     })
   }
 
