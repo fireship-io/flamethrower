@@ -85,7 +85,7 @@ export function handleLinkClick(e: MouseEvent): RouteChangeData {
   // Link qualified
   if (anchor?.hasAttribute('href')) {
     const ahref = anchor.getAttribute('href');
-    const url = new URL(ahref, location.origin);
+    const url = new URL(ahref, location.href);
 
     // Start router takeover
     e.preventDefault();
