@@ -1,22 +1,20 @@
 import { FlamethrowerOptions, RouteChangeData } from './interfaces';
-import {
-  addToPushState,
-  handleLinkClick,
-  handlePopState,
-  scrollToTop,
-} from './handlers';
+import { addToPushState, handleLinkClick, handlePopState, scrollToTop } from './handlers';
 import { mergeHead, formatNextDocument, replaceBody, runScripts } from './dom';
 
 const defaultOpts = {
   log: false,
   prefetch: true,
-  pageTransitions: false,
+  pageTransitions: false
 };
 
 export class Router {
   public enabled = true;
   private prefetched = new Set<string>();
   private observer: IntersectionObserver;
+
+  // Announces the current page title to screen readers
+  private announcer: HTMLDivElement;
 
   constructor(public opts?: FlamethrowerOptions) {
     this.opts = { ...defaultOpts, ...opts };
@@ -25,10 +23,9 @@ export class Router {
       document.addEventListener('click', (e) => this.onClick(e));
       window.addEventListener('popstate', (e) => this.onPop(e));
       this.prefetch();
+      this.announcePageChanged();
     } else {
-      console.warn(
-        'flamethrower router not supported in this browser or environment'
-      );
+      console.warn('flamethrower router not supported in this browser or environment');
       this.enabled = false;
     }
   }
@@ -67,7 +64,7 @@ export class Router {
     const intersectionOpts = {
       root: null,
       rootMargin: '0px',
-      threshold: 1.0,
+      threshold: 1.0
     };
 
     if (this.opts.prefetch && 'IntersectionObserver' in window) {
@@ -82,12 +79,12 @@ export class Router {
 
           if (entry.isIntersecting) {
             const linkEl = document.createElement('link');
-            linkEl.rel = `prefetch`;
+            linkEl.rel = 'prefetch';
             linkEl.href = url;
             linkEl.as = 'document';
 
             linkEl.onload = () => this.log('🌩️ prefetched', url);
-            linkEl.onerror = (err) => this.log("🤕 can't prefetch", url, err);
+            linkEl.onerror = (err) => this.log('🤕 can\'t prefetch', url, err);
 
             document.head.appendChild(linkEl);
 
@@ -102,8 +99,7 @@ export class Router {
         (node) =>
           node.href.includes(document.location.origin) && // on origin url
           !node.href.includes('#') && // not an id anchor
-          node.href !==
-            (document.location.href || document.location.href + '/') && // not current page
+          node.href !== (document.location.href || document.location.href + '/') && // not current page
           !this.prefetched.has(node.href) // not already prefetched
       );
 
@@ -159,10 +155,7 @@ export class Router {
 
         // Merge BODY
         // with optional native browser page transitions
-        if (
-          this.opts.pageTransitions &&
-          (document as any).createDocumentTransition
-        ) {
+        if (this.opts.pageTransitions && (document as any).createDocumentTransition) {
           const transition = (document as any).createDocumentTransition();
           transition.start(() => {
             replaceBody(nextDoc);
@@ -178,6 +171,8 @@ export class Router {
 
         window.dispatchEvent(new CustomEvent('router:end'));
 
+        this.announcePageChanged();
+
         // delay for any js rendered links
         setTimeout(() => {
           this.prefetch();
@@ -191,5 +186,22 @@ export class Router {
       console.error('💥 router fetch failed', err);
       return false;
     }
+  }
+  /**
+   * Announces the current page title to screen readers
+   */
+  private announcePageChanged(): void {
+    if (!this.announcer) {
+      this.announcer = document.createElement('div');
+      this.announcer.setAttribute('id', 'flamethrower-announcer');
+      this.announcer.setAttribute('aria-live', 'assertive');
+      this.announcer.setAttribute('aria-atomic', 'true');
+      this.announcer.setAttribute(
+        'style',
+        'position: absolute; left: 0; top: 0; clip: rect(0 0 0 0); clip-path: inset(50%); overflow: hidden; white-space: nowrap; width: 1px; height: 1px'
+      );
+    }
+    this.announcer.textContent = document.title;
+    document.body.appendChild(this.announcer);
   }
 }
