@@ -31,7 +31,9 @@ export function addToPushState(url: string) {
 
 // Smooth stroll to anchor link
 export function scrollToAnchor(anchor) {
-  document.querySelector(anchor).scrollIntoView({ behavior: 'smooth', block: 'start' });
+  document
+    .querySelector(anchor)
+    .scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
 /**
@@ -58,7 +60,11 @@ export function handleLinkClick(e: MouseEvent): RouteChangeData {
   }
 
   // Find element containing href
-  for (let n = e.target as HTMLElement; n.parentNode; n = n.parentNode as HTMLElement) {
+  for (
+    var n = e.target as HTMLElement;
+    n.parentNode;
+    n = n.parentNode as HTMLElement
+  ) {
     if (n.nodeName === 'A') {
       anchor = n as HTMLAnchorElement;
       break;
