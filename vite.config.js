@@ -8,7 +8,7 @@ export default defineConfig({
     lib: {
       entry: resolve(__dirname, 'lib/main.ts'),
       name: 'Flamethrower',
-      fileName: 'main'
+      fileName: 'main',
     },
     rollupOptions: {
       // make sure to externalize deps that shouldn't be bundled
@@ -17,11 +17,11 @@ export default defineConfig({
       output: {
         // Provide global variables to use in the UMD build
         // for externalized deps
-        globals: {}
-      }
-    }
+        globals: {},
+      },
+    },
   },
-  plugins: [copyToExample()]
+  plugins: [copyToExample()],
 });
 
 function copyToExample() {
@@ -31,6 +31,6 @@ function copyToExample() {
       const example = './example/flamethrower.js';
       copyFileSync(build, example);
       console.log('copied bundle to example');
-    }
+    },
   };
 }
