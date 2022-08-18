@@ -1,3 +1,5 @@
+import { Router } from './router';
+
 export interface FlamethrowerOptions {
     log?: boolean;
     /**
@@ -11,9 +13,10 @@ export interface FlamethrowerOptions {
     pageTransitions?: boolean,
   }
   
-  export interface RouteChangeData {
-    type: 'link' | 'popstate' | 'noop' | 'disqualified' | 'scroll' | 'go' | string;
-    next?: string;
-    prev?: string;
-  }
+export interface RouteChangeData {
+  type: 'link' | 'popstate' | 'noop' | 'disqualified' | 'scroll' | 'go' | string;
+  next?: string;
+  prev?: string;
+}
   
+export type FlameWindow = Window & typeof globalThis & FlameRouter;
