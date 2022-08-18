@@ -2,23 +2,23 @@ import { expect, test } from '@playwright/test';
 
 test('basic navigation works', async ({ page }) => {
 
-  await page.goto('http://localhost:3000');
+  await page.goto('/');
   await expect(page).toHaveTitle(/Flamethrower/);
 
   const about = page.locator('#about');
 
   await about.click();
-  await expect(page).toHaveURL('http://localhost:3000/about/');
+  await expect(page).toHaveURL('/about/');
   await expect(page).toHaveTitle(/About/); 
 
   await page.goBack();
-  await expect(page).toHaveURL('http://localhost:3000/');
+  await expect(page).toHaveURL('/');
 
 });
 
 test('only valid scripts should run', async ({ page }) => {
 
-  await page.goto('http://localhost:3000');
+  await page.goto('/');
   const about = page.locator('#about');
   await about.click();
   const bodyCheck = page.locator('#bodyCheck');
@@ -35,13 +35,13 @@ test('only valid scripts should run', async ({ page }) => {
 
 test('navigate programmatically', async ({ page }) => {
 
-  await page.goto('http://localhost:3000');
+  await page.goto('/');
   const about = page.locator('#about');
   await about.click();
 
   const go = page.locator('#go');
   await go.click();
-  await expect(page).toHaveURL('http://localhost:3000/');
+  await expect(page).toHaveURL('/');
 
 
 });
@@ -49,7 +49,7 @@ test('navigate programmatically', async ({ page }) => {
 
 test('meta tags are added and removed', async ({ page }) => {
 
-  await page.goto('http://localhost:3000');
+  await page.goto('/');
   const about = page.locator('#about');
   await about.click();
 
@@ -75,7 +75,7 @@ test('meta tags are added and removed', async ({ page }) => {
 
 test('prefetching works', async ({ page }) => {
 
-  await page.goto('http://localhost:3000');
+  await page.goto('/');
   let preAbout = page.locator('link[href="/about"]');
   await expect(preAbout).toHaveCount(1)
 
