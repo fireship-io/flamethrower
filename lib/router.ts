@@ -18,7 +18,7 @@ export class Router {
   private observer: IntersectionObserver;
 
   constructor(public opts?: FlamethrowerOptions) {
-    this.opts = { ...defaultOpts, ...opts };
+    this.opts = { ...defaultOpts, ...(opts ?? {}) };
 
     if (window?.history) {
       document.addEventListener('click', (e) => this.onClick(e));
