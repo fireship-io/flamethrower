@@ -2,98 +2,76 @@
  * @param  {string} html
  * Convert an HTML string to new Document
  */
-export function formatNextDocument(html: string): Document {
-  const parser = new DOMParser();
-  return parser.parseFromString(html, 'text/html');
+export function formatNextDocument(html: string) {
+  var parser = new DOMParser();
+  const nextDoc = parser.parseFromString(html, 'text/html');
+  return nextDoc;
 }
 
 /**
  * @param  {Document} nextDoc
  * Replace Body
  */
-export function replaceBody(nextDoc: Document): void {
-  document.body.replaceWith(nextDoc.body);
+export function replaceBody(nextDoc: Document) {
+  // document.body.replaceWith(nextDoc.body);
+  document.body.innerHTML = nextDoc.body.innerHTML;
 }
 
 /**
  * @param  {Document} nextDoc
  * Merge new head data
  */
-export function mergeHead(nextDoc: Document): void {
+export function mergeHead(nextDoc: Document) {
+  const currentHead = document.head;
+
   // Update head
   // Head elements that changed on next document
-  const getValidNodes = (doc: Document): Element[] => Array.from(doc.querySelectorAll('head>:not([rel="prefetch"]'));
-  const oldNodes = getValidNodes(document);
-  const nextNodes = getValidNodes(nextDoc);
+  // TODO make this algo more efficient
+  const old = Array.from(document.head.children);
+  const next = Array.from(nextDoc.head.children);
+  const freshNodes = next.filter(
+    (newNode) => !old.find((oldNode) => oldNode.isEqualNode(newNode))
+  );
+  const staleNodes = old.filter(
+    (oldNode) => !next.find((newNode) => newNode.isEqualNode(oldNode))
+  );
 
-  const { staleNodes, freshNodes } = partitionNodes(oldNodes, nextNodes);
+  staleNodes.forEach((node) => {
+    if (node.getAttribute('rel') === 'prefetch') {
+      return;
+    }
+    node.remove();
+  });
 
-  staleNodes.forEach((node) => node.remove());
-
-  document.head.append(...freshNodes);
+  freshNodes.forEach((node) => {
+    currentHead.appendChild(node);
+  });
 }
-
-function partitionNodes(oldNodes: Element[], nextNodes: Element[]): PartitionedNodes {
-  const staleNodes: Element[] = [];
-  const freshNodes: Element[] = [];
-  let oldMark = 0;
-  let nextMark = 0;
-  while (oldMark < oldNodes.length && nextMark < nextNodes.length) {
-    const old = oldNodes[oldMark];
-    const next = nextNodes[nextMark];
-    if (old.isEqualNode(next)) {
-      oldMark++;
-      nextMark++;
-      continue;
-    }
-    const oldInFresh = freshNodes.findIndex((node) => node.isEqualNode(old));
-    if (oldInFresh !== -1) {
-      freshNodes.splice(oldInFresh, 1);
-      oldMark++;
-      continue;
-    }
-    const nextInStale = staleNodes.findIndex((node) => node.isEqualNode(next));
-    if (nextInStale !== -1) {
-      staleNodes.splice(nextInStale, 1);
-      nextMark++;
-      continue;
-    }
-    old && staleNodes.push(old);
-    next && freshNodes.push(next);
-    oldMark++;
-    nextMark++;
-  }
-
-  return { staleNodes, freshNodes };
-}
-
-type PartitionedNodes = {
-  freshNodes: Element[];
-  staleNodes: Element[];
-};
 
 /**
  * Runs JS in the fetched document
  * head scripts will only run with data-reload attr
  * all body scripts will run
  */
-export function runScripts(): void {
+export function runScripts() {
   // Run scripts with data-reload attr
-  const headScripts = document.head.querySelectorAll('[data-reload]');
+  const headScripts = Array.from(
+    document.head.querySelectorAll('[data-reload]')
+  );
   headScripts.forEach(replaceAndRunScript);
 
   // Run scripts in body
-  const bodyScripts = document.body.querySelectorAll('script');
+  const bodyScripts = Array.from(document.body.querySelectorAll('script'));
   bodyScripts.forEach(replaceAndRunScript);
 }
 
 // Private helper to re-execute scripts
-function replaceAndRunScript(oldScript: HTMLScriptElement): void {
+async function replaceAndRunScript(oldScript: HTMLScriptElement) {
   const newScript = document.createElement('script');
   const attrs = Array.from(oldScript.attributes);
   for (const { name, value } of attrs) {
-    newScript[name] = value;
+    newScript.setAttribute(name, value);
   }
-  newScript.append(oldScript.textContent);
-  oldScript.replaceWith(newScript);
+  newScript.appendChild(document.createTextNode(oldScript.innerHTML));
+  oldScript.parentNode.replaceChild(newScript, oldScript);
 }

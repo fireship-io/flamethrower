@@ -1,5 +1,5 @@
 import { Router } from './router';
-import { FlamethrowerOptions, FlameWindow } from './interfaces';
+import { FlamethrowerOptions } from './interfaces';
 
 /**
  * @param  {FlamethrowerOptions} opts?
@@ -9,9 +9,6 @@ import { FlamethrowerOptions, FlameWindow } from './interfaces';
 export default (opts?: FlamethrowerOptions) => {
   const router = new Router(opts);
   opts.log && console.log('🔥 flamethrower engaged');
-  if (window) {
-    const flame = window as FlameWindow;
-    flame.flamethrower = router;
-  }
+  if (window) (window as any).flamethrower = router;
   return router;
-};
+}
