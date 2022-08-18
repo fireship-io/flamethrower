@@ -6,9 +6,9 @@ A 2kB zero-config router and prefetcher that makes a static site feel like a bla
 
 ## Why?
 
-**Problem:** Static sites feel slow and cannot easily share state between pages. This makes it hard to create a good UX with JavaScript libraries because each new page needs to reboot your JS from scratch.
+**Problem:** Static sites feel slow and cannot easily share state between pages. This makes it difficult to create a pleasant user experience (UX) with JavaScript libraries because each new page needs to reboot your JS from scratch.
 
-The goal is to make route changes on static sites feel faster, like an SPA, without the need for a frontend framework to take over the entire DOM.
+Rather than requiring a frontend framework to take control of the entire DOM, the goal is to make route changes on static sites feel faster, like an SPA.
 
 ## How?
 
@@ -69,10 +69,9 @@ Prefecthing is disabled by default.
 - `visible`: prefetch visible links on the page with IntersectionObserver
 - `hover`: prefetch links on hover
 
-
 ```js
 const router = flamethrower({ prefetch: 'visible' });
-``` 
+```
 
 ### Misc
 
