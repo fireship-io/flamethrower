@@ -1,0 +1,15 @@
+# List the start up tasks. Learn more https://www.gitpod.io/docs/config-start-tasks/
+tasks:
+  - name: Install flamethrower-router
+    init: npm i flamethrower-router # runs during prebuild
+
+  - name: Build It
+    init: npm run dev # runs during prebuild
+
+  - name: Serve the example
+    command: npm run serve
+
+# List the ports to expose. Learn more https://www.gitpod.io/docs/config-ports/
+ports:
+  - port: 3000
+    onOpen: open-preview

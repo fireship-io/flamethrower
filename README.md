@@ -79,6 +79,11 @@ Scripts in `<body>` will run on every page change, but you can force scripts in 
 
 ### Contributing
 
+> You Can Follow manual steps or just press the below button:
+
+[![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#https://github.com/fireship-io/flamethrower)
+
+
 Build it:
 
 ```
