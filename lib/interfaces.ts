@@ -19,4 +19,4 @@ export interface RouteChangeData {
   prev?: string;
 }
   
-export type FlameWindow = Window & typeof globalThis & FlameRouter;
+export type FlameWindow = Window & typeof globalThis & { flamethrower: Router };
