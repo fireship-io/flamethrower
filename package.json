@@ -1,6 +1,6 @@
 {
   "name": "flamethrower-router",
-  "version": "0.0.0-meme.4",
+  "version": "0.0.0-meme.5",
   "description": "Blazingly fast SPA-like router for static sites",
   "main": "dist/main.js",
   "types": "dist/main.d.ts",

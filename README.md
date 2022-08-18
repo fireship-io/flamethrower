@@ -35,7 +35,7 @@ That's it. Your site now feels blazingly fast.
 
 ```js
 // with opts
-const router = flamethrower({ prefetch: true, log: false, pageTransitions: false });
+const router = flamethrower({ prefetch: 'visible', log: false, pageTransitions: false });
 
 // Navigate manually
 router.go('/somewhere');
@@ -61,6 +61,18 @@ Scripts in `<body>` will run on every page change, but you can force scripts in 
 ```html
 <script src="..." data-reload></script>
 ```
+
+### Prefetching
+
+Prefecthing is disabled by default.
+
+- `visible`: prefetch visible links on the page with IntersectionObserver
+- `hover`: prefetch links on hover
+
+
+```js
+const router = flamethrower({ prefetch: 'visible' });
+``` 
 
 ### Misc
 
