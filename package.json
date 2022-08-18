@@ -5,6 +5,11 @@
   "main": "dist/main.js",
   "types": "dist/main.d.ts",
   "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/fireship-io/flamethrower.git"
+  },
+  "homepage": "https://github.com/fireship-io/flamethrower#readme",
   "scripts": {
     "dev": "vite build --watch",
     "build": "vite build && npx tsc --emitDeclarationOnly",
