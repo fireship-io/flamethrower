@@ -9,7 +9,8 @@ import { mergeHead, formatNextDocument, replaceBody, runScripts } from './dom';
 
 const defaultOpts = {
   log: false,
-  pageTransitions: false
+  prefetch: true,
+  pageTransitions: false,
 };
 
 export class Router {
@@ -31,7 +32,6 @@ export class Router {
       this.enabled = false;
     }
   }
-
   /**
    * @param  {string} path
    * Navigate to a url
@@ -56,59 +56,21 @@ export class Router {
     window.history.forward();
   }
 
-  /**
-   * Find all links on page
-   */
-  private get allLinks() {
-    return Array.from(document.links).filter(
-      (node) =>
-        node.href.includes(document.location.origin) && // on origin url
-        !node.href.includes('#') && // not an id anchor
-        node.href !==
-          (document.location.href || document.location.href + '/') && // not current page
-        !this.prefetched.has(node.href) // not already prefetched
-    );
-  }
-
   private log(...args: any[]) {
     this.opts.log && console.log(...args);
   }
 
   /**
-   *  Check if the route is qualified for prefetching and prefetch it with chosen method
+   *  Finds links on page and prefetches them
    */
   private prefetch() {
-    if (this.opts.prefetch === 'visible') {
-      this.prefetchVisible();
-    } else if (this.opts.prefetch === 'hover') {
-      this.prefetchOnHover();
-    } else {
-      return;
-    }
-  }
-
-  /**
-   *  Finds links on page and prefetches them on hover
-   */
-  private prefetchOnHover() {
-    this.allLinks.forEach((node) =>  {
-      const url = node.getAttribute('href');
-      // Using `pointerenter` instead of `mouseenter` to support touch devices hover behavior, PS: `pointerenter` event fires only once
-      node.addEventListener('pointerenter', () => this.createLink(url), {once: true});
-    })
-  }
-
-  /**
-   *  Prefetch all visible links
-   */
-  private prefetchVisible() {
     const intersectionOpts = {
       root: null,
       rootMargin: '0px',
       threshold: 1.0,
     };
 
-    if ('IntersectionObserver' in window) {
+    if (this.opts.prefetch && 'IntersectionObserver' in window) {
       this.observer ||= new IntersectionObserver((entries, observer) => {
         entries.forEach((entry) => {
           const url = entry.target.getAttribute('href');
@@ -119,32 +81,34 @@ export class Router {
           }
 
           if (entry.isIntersecting) {
-            this.createLink(url);
+            const linkEl = document.createElement('link');
+            linkEl.rel = `prefetch`;
+            linkEl.href = url;
+            linkEl.as = 'document';
+
+            linkEl.onload = () => this.log('🌩️ prefetched', url);
+            linkEl.onerror = (err) => this.log("🤕 can't prefetch", url, err);
+
+            document.head.appendChild(linkEl);
+
+            // Keep track of prefetched links
+            this.prefetched.add(url);
             observer.unobserve(entry.target);
           }
         });
       }, intersectionOpts);
-      this.allLinks.forEach((node) => this.observer.observe(node));
+
+      const allLinks = Array.from(document.links).filter(
+        (node) =>
+          node.href.includes(document.location.origin) && // on origin url
+          !node.href.includes('#') && // not an id anchor
+          node.href !==
+            (document.location.href || document.location.href + '/') && // not current page
+          !this.prefetched.has(node.href) // not already prefetched
+      );
+
+      allLinks.forEach((node) => this.observer.observe(node));
     }
-  }
-
-  /**
-   * @param  {string} url
-   * Create a link to prefetch
-   */
-  private createLink(url: string) {
-    const linkEl = document.createElement('link');
-    linkEl.rel = `prefetch`;
-    linkEl.href = url;
-    linkEl.as = 'document';
-
-    linkEl.onload = () => this.log('🌩️ prefetched', url);
-    linkEl.onerror = (err) => this.log("🤕 can't prefetch", url, err);
-
-    document.head.appendChild(linkEl);
-
-    // Keep track of prefetched links
-    this.prefetched.add(url);
   }
 
   /**
@@ -186,7 +150,7 @@ export class Router {
         addToPushState(next);
 
         // Fetch next document
-        const res = await fetch(next, { headers: { 'X-Flamethrower': '1' } });
+        const res = await fetch(next);
         const html = await res.text();
         const nextDoc = formatNextDocument(html);
 
