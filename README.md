@@ -43,8 +43,8 @@ router.back();
 router.forward();
 
 // Listen to events
-window.addEventListener('router:fetch', showLoader);
-window.addEventListener('router:end', hideLoader);
+window.addEventListener('flamethrower:router:fetch', showLoader);
+window.addEventListener('flamethrower:router:end', hideLoader);
 
 // Disable it
 router.enabled = false;
@@ -72,7 +72,7 @@ Prefecthing is disabled by default.
 
 ```js
 const router = flamethrower({ prefetch: 'visible' });
-``` 
+```
 
 ### Misc
 

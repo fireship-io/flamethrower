@@ -180,7 +180,7 @@ export class Router {
       if (['popstate', 'link', 'go'].includes(type) && next !== prev) {
         this.opts.log && console.time('⏱️');
 
-        window.dispatchEvent(new CustomEvent('router:fetch'));
+        window.dispatchEvent(new CustomEvent('flamethrower:router:fetch'));
 
         // Update window history
         addToPushState(next);
@@ -212,7 +212,7 @@ export class Router {
         // handle scroll
         scrollToTop(type);
 
-        window.dispatchEvent(new CustomEvent('router:end'));
+        window.dispatchEvent(new CustomEvent('flamethrower:router:end'));
 
         // delay for any js rendered links
         setTimeout(() => {
