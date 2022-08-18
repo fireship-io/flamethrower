@@ -1,6 +1,6 @@
 {
   "name": "flamethrower-router",
-  "version": "0.0.0-meme.3",
+  "version": "0.0.0-meme.6",
   "description": "Blazingly fast SPA-like router for static sites",
   "main": "dist/main.js",
   "types": "dist/main.d.ts",
@@ -22,6 +22,7 @@
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-prettier": "^4.2.1",
     "eslint-plugin-sonarjs": "^0.15.0",
+    "prettier": "^2.7.1",
     "serve": "^14.0.1",
     "typescript": "^4.7.4",
     "vite": "^3.0.7"
