@@ -94,13 +94,14 @@ export function handleLinkClick(e: MouseEvent): RouteChangeData {
     if (ahref?.startsWith('#')) {
       scrollToAnchor(ahref);
       return { type: 'scrolled' };
-    } else {
-      const next = fullURL(url.href);
-      const prev = fullURL();
-
-      // addToPushState(next);
-      return { type: 'link', next, prev };
     }
+
+    const next = fullURL(url.href);
+    const prev = fullURL();
+
+    // addToPushState(next);
+    return { type: 'link', next, prev };
+
   } else {
     return { type: 'noop' };
   }
