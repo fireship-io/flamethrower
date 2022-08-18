@@ -16,7 +16,7 @@ export function scrollToTop(type: string) {
  */
 export function fullURL(url?: string) {
   const href = new URL(url || window.location.href).href;
-  return href.endsWith('/') ? href : `${href}/`;
+  return href.endsWith('/') || href.includes('.') ? href : `${href}/`;
 }
 
 /**
