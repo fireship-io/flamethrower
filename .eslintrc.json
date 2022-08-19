@@ -1,7 +1,7 @@
 {
   "parser": "@typescript-eslint/parser",
   "extends": ["plugin:sonarjs/recommended", "plugin:@typescript-eslint/recommended", "prettier", "plugin:prettier/recommended"],
-
+  "plugins": ["sonarjs", "prettier"],
   "overrides": [
     {
       "files": ["*.ts"],
@@ -59,7 +59,7 @@
             },
             "singleline": {
               "delimiter": "semi",
-              "requireLast": true
+              "requireLast": false
             }
           }
         ],
@@ -101,7 +101,7 @@
         "@typescript-eslint/no-namespace": "off",
         "@typescript-eslint/interface-name-prefix": "off",
         "@typescript-eslint/no-parameter-properties": "off",
-        "@typescript-eslint/no-require-imports": "warn",
+        "@typescript-eslint/no-require-imports": "off",
         "@typescript-eslint/explicit-function-return-type": "off",
         "@typescript-eslint/explicit-member-accessibility": "off",
         "@typescript-eslint/no-unused-vars": "off",
