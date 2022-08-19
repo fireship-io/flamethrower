@@ -222,7 +222,7 @@ export class Router {
         this.opts.log && console.timeEnd('⏱️');
       }
     } catch (err) {
-      window.dispatchEvent(new CustomEvent('router:error', err));
+      window.dispatchEvent(new CustomEvent('flamethrower:router:error', err));
       this.opts.log && console.timeEnd('⏱️');
       console.error('💥 router fetch failed', err);
       return false;
