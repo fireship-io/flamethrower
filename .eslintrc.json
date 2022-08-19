@@ -13,6 +13,7 @@
         "@typescript-eslint/no-var-requires": "warn",
         "@typescript-eslint/semi": ["error"],
         "@typescript-eslint/member-ordering": ["off"],
+        "@typescript-eslint/comma-dangle": "off",
 
         "@typescript-eslint/explicit-function-return-type": [
           "warn",
@@ -91,7 +92,7 @@
         "eqeqeq": "error",
         "semi": "off",
         "quotes": ["error", "single"],
-        "comma-dangle": ["warn", "never"]
+        "comma-dangle": "off"
       }
     },
     {
@@ -110,6 +111,7 @@
         "@typescript-eslint/member-ordering": "off",
         "@typescript-eslint/member-delimiter-style": "off",
         "@typescript-eslint/indent": "off",
+        "@typescript-eslint/comma-dangle": "off",
 
         "no-trailing-spaces": [
           "warn",
@@ -132,7 +134,7 @@
         "eqeqeq": "error",
         "semi": "off",
         "quotes": ["error", "single"],
-        "comma-dangle": ["warn", "never"]
+        "comma-dangle": "off"
       }
     }
   ]
