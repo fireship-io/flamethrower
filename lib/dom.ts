@@ -26,11 +26,30 @@ export function mergeHead(nextDoc: Document): void {
   const oldNodes = getValidNodes(document);
   const nextNodes = getValidNodes(nextDoc);
 
-  const { staleNodes, freshNodes } = partitionNodes(oldNodes, nextNodes);
+  // const { staleNodes, freshNodes } = partitionNodes(oldNodes, nextNodes);
 
-  staleNodes.forEach((node) => node.remove());
+  // staleNodes.forEach((node) => node.remove());
 
-  document.head.append(...freshNodes);
+  // document.head.append(...freshNodes);
+
+  // Start merging: Make sure to keep the order of the head tag nextNode
+  let i = 0;
+  while (i < oldNodes.length && i < nextNodes.length) {
+    if (!oldNodes[i].isEqualNode(nextNodes[i])) {
+      oldNodes[i].replaceWith(nextNodes[i]);
+    }
+    i++;
+  }
+  let j = i;
+  while (j < oldNodes.length) {
+    oldNodes[j].remove();
+    j++;
+  }
+  j = i;
+  while (j < nextNodes.length) {
+    document.head.append(nextNodes[j]);
+    j++;
+  }
 }
 
 function partitionNodes(oldNodes: Element[], nextNodes: Element[]): PartitionedNodes {
