@@ -1,15 +1,10 @@
-import { FlamethrowerOptions, RouteChangeData } from './interfaces';
-import {
-  addToPushState,
-  handleLinkClick,
-  handlePopState,
-  scrollToTop,
-} from './handlers';
+import { FetchProgressEvent, FlamethrowerOptions, RouteChangeData } from './interfaces';
+import { addToPushState, handleLinkClick, handlePopState, scrollToTop } from './handlers';
 import { mergeHead, formatNextDocument, replaceBody, runScripts } from './dom';
 
 const defaultOpts = {
   log: false,
-  pageTransitions: false
+  pageTransitions: false,
 };
 
 export class Router {
@@ -25,9 +20,7 @@ export class Router {
       window.addEventListener('popstate', (e) => this.onPop(e));
       this.prefetch();
     } else {
-      console.warn(
-        'flamethrower router not supported in this browser or environment'
-      );
+      console.warn('flamethrower router not supported in this browser or environment');
       this.enabled = false;
     }
   }
@@ -64,9 +57,8 @@ export class Router {
       (node) =>
         node.href.includes(document.location.origin) && // on origin url
         !node.href.includes('#') && // not an id anchor
-        node.href !==
-          (document.location.href || document.location.href + '/') && // not current page
-        !this.prefetched.has(node.href) // not already prefetched
+        node.href !== (document.location.href || document.location.href + '/') && // not current page
+        !this.prefetched.has(node.href), // not already prefetched
     );
   }
 
@@ -91,11 +83,11 @@ export class Router {
    *  Finds links on page and prefetches them on hover
    */
   private prefetchOnHover() {
-    this.allLinks.forEach((node) =>  {
+    this.allLinks.forEach((node) => {
       const url = node.getAttribute('href');
       // Using `pointerenter` instead of `mouseenter` to support touch devices hover behavior, PS: `pointerenter` event fires only once
-      node.addEventListener('pointerenter', () => this.createLink(url), {once: true});
-    })
+      node.addEventListener('pointerenter', () => this.createLink(url), { once: true });
+    });
   }
 
   /**
@@ -186,7 +178,48 @@ export class Router {
         addToPushState(next);
 
         // Fetch next document
-        const res = await fetch(next, { headers: { 'X-Flamethrower': '1' } });
+        const res = await fetch(next, { headers: { 'X-Flamethrower': '1' } })
+          .then((res) => {
+            const reader = res.body.getReader();
+            const length = parseInt(res.headers.get('Content-Length'));
+            let bytesReceived = 0;
+
+            // take each received chunk and emit an event, pass through to new steam which will be read as text
+            return new ReadableStream({
+              start(controller) {
+                // The following function handles each data chunk
+                function push() {
+                  // "done" is a Boolean and value a "Uint8Array"
+                  reader.read().then(({ done, value }) => {
+                    // If there is no more data to read
+                    if (done) {
+                      controller.close();
+                      return;
+                    }
+
+                    bytesReceived += value.length;
+                    window.dispatchEvent(
+                      new CustomEvent<FetchProgressEvent>('flamethrower:router:fetch-progress', {
+                        detail: {
+                          // length may be NaN if no Content-Length header was found
+                          progress: Number.isNaN(length) ? 0 : (bytesReceived / length) * 100,
+                          received: bytesReceived,
+                          length: length || 0,
+                        },
+                      }),
+                    );
+                    // Get the data and send it to the browser via the controller
+                    controller.enqueue(value);
+                    // Check chunks by logging to the console
+                    push();
+                  });
+                }
+
+                push();
+              },
+            });
+          })
+          .then((stream) => new Response(stream, { headers: { 'Content-Type': 'text/html' } }));
         const html = await res.text();
         const nextDoc = formatNextDocument(html);
 
@@ -195,10 +228,7 @@ export class Router {
 
         // Merge BODY
         // with optional native browser page transitions
-        if (
-          this.opts.pageTransitions &&
-          (document as any).createDocumentTransition
-        ) {
+        if (this.opts.pageTransitions && (document as any).createDocumentTransition) {
           const transition = (document as any).createDocumentTransition();
           transition.start(() => {
             replaceBody(nextDoc);
