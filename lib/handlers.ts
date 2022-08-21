@@ -29,7 +29,7 @@ export function addToPushState(url: string) {
   }
 }
 
-// Smooth stroll to anchor link
+// Smooth scrool to anchor link
 export function scrollToAnchor(anchor) {
   document
     .querySelector(anchor)
