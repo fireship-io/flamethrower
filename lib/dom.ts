@@ -99,11 +99,13 @@ type PartitionedNodes = {
 export function runScripts(): void {
   // Run scripts with data-reload attr
   const headScripts = document.head.querySelectorAll('[data-reload]');
-  headScripts.forEach(replaceAndRunScript);
+  // headScripts.forEach(replaceAndRunScript);
+  loadScriptSync(headScripts);
 
   // Run scripts in body
   const bodyScripts = document.body.querySelectorAll('script');
-  bodyScripts.forEach(replaceAndRunScript);
+  // bodyScripts.forEach(replaceAndRunScript);
+  loadScriptSync(bodyScripts);
 }
 
 // Private helper to re-execute scripts
@@ -115,4 +117,31 @@ function replaceAndRunScript(oldScript: HTMLScriptElement): void {
   }
   newScript.append(oldScript.textContent);
   oldScript.replaceWith(newScript);
+}
+
+// Load array scripts synchronously
+function loadScriptSync(scripts: NodeListOf<Element>, index: number = 0): void {
+  if(scripts.length == index){
+      return;
+  }
+
+  let oldScript = scripts[index];
+  const newScript = document.createElement('script');
+  const attrs = Array.from(oldScript.attributes);
+  for (const { name, value } of attrs) {
+    newScript.setAttribute(name, value);
+  }
+  newScript.append(oldScript.textContent);
+
+  // If exist src attribute, add event onload
+  if(newScript.src){
+    newScript.onload = function () {
+      loadScriptSync(scripts, ++index)
+    };
+    oldScript.replaceWith(newScript);
+  }
+  else{
+    oldScript.replaceWith(newScript);
+    loadScriptSync(scripts, ++index)
+  }
 }
