@@ -184,7 +184,7 @@ export class Router {
             const length = parseInt(res.headers.get('Content-Length'));
             let bytesReceived = 0;
 
-            // take each received chunk and emit an event, pass through to new steam which will be read as text
+            // take each received chunk and emit an event, pass through to new stream which will be read as text
             return new ReadableStream({
               start(controller) {
                 // The following function handles each data chunk
