@@ -1,7 +1,7 @@
 # addToPushState
 
 ```js
-export function addToPushState(url: string)
+export function addToPushState(url: string) {}
 ```
 
 Writes URL to browser history. 

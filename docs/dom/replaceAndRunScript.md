@@ -1,7 +1,7 @@
 # replaceAndRunScript
 
 ```js
-function replaceAndRunScript(oldScript: HTMLScriptElement): void
+function replaceAndRunScript(oldScript: HTMLScriptElement): void {}
 ```
 
 A private helper to re-execute scripts.

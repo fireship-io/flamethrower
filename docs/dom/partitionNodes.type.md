@@ -1,7 +1,7 @@
 # PartitionedNodes
 
 ```ts
-type PartitionedNodes(){}
+type PartitionedNodes() {}
 ```
 
 Contains `freshNodes` with type `Element[]` and staleNodes with type `Element[]`.

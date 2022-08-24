@@ -1,7 +1,7 @@
 # onClick method
 
 ```js
-private onClick(e: MouseEvent)
+private onClick(e: MouseEvent) {}
 ```
 
 Handle clicks on links

@@ -1,7 +1,7 @@
 # handlePopState
 
 ```js
-export function handlePopState(e: PopStateEvent): RouteChangeData
+export function handlePopState(e: PopStateEvent): RouteChangeData {}
 ```
 
 Handles back button/forward.

@@ -1,7 +1,7 @@
 # FlameWindow
 
 ```js
-export type FlameWindow
+export type FlameWindow {}
 ```
 
 Exports type FlameWindow

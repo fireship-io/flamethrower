@@ -1,7 +1,7 @@
 # handleLinkClick
 
 ```js
-export function handleLinkClick(e: MouseEvent): RouteChangeData
+export function handleLinkClick(e: MouseEvent): RouteChangeData {}
 ```
 
 Organizes link clicks into types

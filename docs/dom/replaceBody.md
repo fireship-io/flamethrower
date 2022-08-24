@@ -1,7 +1,7 @@
 # replaceBody
 
 ```js
-export function replaceBody(nextDoc: string): void
+export function replaceBody(nextDoc: string): void {}
 ```
 
 Replaces the Body. 

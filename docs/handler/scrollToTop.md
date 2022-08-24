@@ -1,7 +1,7 @@
 # scrollToTop
 
 ```js
-export function scrollToTop(type: string)
+export function scrollToTop(type: string) {}
 ```
 
 Scrolls to the top of page.

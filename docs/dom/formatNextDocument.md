@@ -1,7 +1,7 @@
 # formatNextDocument
 
 ```js
-export function formatNextDocument(html: string): Document
+export function formatNextDocument(html: string): Document {}
 ```
 
 Convert an HTML string to new Document. 

@@ -1,7 +1,7 @@
 # partitionNodes
 
 ```js
-function partitionNodes(oldNodes: Element[], nextNodes: Element[]): PartitionedNodes
+function partitionNodes(oldNodes: Element[], nextNodes: Element[]): PartitionedNodes {}
 ```
 
 Partitions the nodes. 

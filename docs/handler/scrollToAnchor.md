@@ -1,7 +1,7 @@
 # scrollToAnchor
 
 ```js
-export function scrollToAnchor(anchor)
+export function scrollToAnchor(anchor) {}
 ```
 
 

@@ -1,7 +1,7 @@
 # RouteChangeData 
 
 ```js
-export interface RouteChangeData
+export interface RouteChangeData {}
 ```
 
 Exports an interface. Has types:

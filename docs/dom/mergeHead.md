@@ -1,7 +1,7 @@
 # mergeHead
 
 ```js
-export function mergeHead(nextDoc: Document): void
+export function mergeHead(nextDoc: Document): void {}
 ```
 
 Merges the new head data. 

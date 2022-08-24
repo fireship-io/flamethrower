@@ -1,7 +1,7 @@
 # fullURL
 
 ```js
-export function fullURL(url?: string)
+export function fullURL(url?: string) {}
 ```
 
 Standard formatting for urls

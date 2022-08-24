@@ -1,7 +1,7 @@
 # log method
 
 ```js
-private log(...args: any[])
+private log(...args: any[]) {}
 ```
 
 console.logs every argument.
