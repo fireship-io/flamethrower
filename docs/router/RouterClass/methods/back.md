@@ -6,4 +6,4 @@ back() {}
 
 Navigates back.
 
-Takes no arguments.
+Takes no arguments and returns type `any`.

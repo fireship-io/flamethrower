@@ -6,4 +6,4 @@ forward() {}
 
 Navigates forward
 
-Takes no arguments.
+Takes no arguments and returns type `any`.
