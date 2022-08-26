@@ -1,6 +1,6 @@
 /**
  * @param  {string} html
- * Convert an HTML string to new Document
+ * Convert any HTML string to new Document
  */
 export function formatNextDocument(html: string): Document {
   const parser = new DOMParser();
