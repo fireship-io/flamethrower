@@ -8,7 +8,7 @@ A 2kB zero-config router and prefetcher that makes a static site feel like a bla
 
 **Problem:** Static sites feel slow and cannot easily share state between pages. This makes it difficult to create a pleasant user experience (UX) with JavaScript libraries because each new page needs to reboot your JS from scratch.
 
-Rather than requiring a frontend framework to take control of the entire DOM, the goal is to make route changes on static sites feel faster, like an SPA.
+Rather than requiring a frontend framework to take control of the entire DOM, the goal is to make route changes on static sites feel faster, like a SPA.
 
 ## How?
 
@@ -119,3 +119,13 @@ Make sure all playwright tests pass before submitting new features.
 ```
 npm run test
 ```
+
+### Deploying
+
+You can deploy Flamethrower to [Vercel](http://vercel.com/) as follows:
+
+```
+npm run deploy
+```
+
+This uses the [Build Output API](https://vercel.com/docs/build-output-api/v3) and the [Vercel CLI](https://vercel.com/cli) to deploy the `/example` folder.
