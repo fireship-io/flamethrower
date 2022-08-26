@@ -175,7 +175,9 @@ export class Router {
         window.dispatchEvent(new CustomEvent('flamethrower:router:fetch'));
 
         // Update window history
-        addToPushState(next);
+        if (type != 'popstate') {
+          addToPushState(next);
+        }
 
         // Fetch next document
         const res = await fetch(next, { headers: { 'X-Flamethrower': '1' } })
