@@ -25,7 +25,6 @@ export function mergeHead(nextDoc: Document): void {
   const getValidNodes = (doc: Document): Element[] => Array.from(doc.querySelectorAll('head>:not([rel="prefetch"]'));
   const oldNodes = getValidNodes(document);
   const nextNodes = getValidNodes(nextDoc);
-
   const { staleNodes, freshNodes } = partitionNodes(oldNodes, nextNodes);
 
   staleNodes.forEach((node) => node.remove());
@@ -38,21 +37,21 @@ function partitionNodes(oldNodes: Element[], nextNodes: Element[]): PartitionedN
   const freshNodes: Element[] = [];
   let oldMark = 0;
   let nextMark = 0;
-  while (oldMark < oldNodes.length && nextMark < nextNodes.length) {
+  while (oldMark < oldNodes.length || nextMark < nextNodes.length) {
     const old = oldNodes[oldMark];
     const next = nextNodes[nextMark];
-    if (old.isEqualNode(next)) {
+    if (old?.isEqualNode(next)) {
       oldMark++;
       nextMark++;
       continue;
     }
-    const oldInFresh = freshNodes.findIndex((node) => node.isEqualNode(old));
+    const oldInFresh = old ? freshNodes.findIndex((node) => node.isEqualNode(old)) : -1;
     if (oldInFresh !== -1) {
       freshNodes.splice(oldInFresh, 1);
       oldMark++;
       continue;
     }
-    const nextInStale = staleNodes.findIndex((node) => node.isEqualNode(next));
+    const nextInStale = next ? staleNodes.findIndex((node) => node.isEqualNode(next)) : -1;
     if (nextInStale !== -1) {
       staleNodes.splice(nextInStale, 1);
       nextMark++;
