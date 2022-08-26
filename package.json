@@ -14,7 +14,8 @@
     "dev": "vite build --watch",
     "build": "vite build && npx tsc --emitDeclarationOnly",
     "serve": "serve ./example",
-    "test": "playwright test"
+    "test": "playwright test",
+    "deploy": "node ./deploy-vercel.mjs && vercel deploy --prebuilt"
   },
   "keywords": [],
   "author": "Jeff Delaney",
