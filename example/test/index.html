@@ -30,8 +30,6 @@
       // test
       window.addEventListener('flamethrower:router:fetch-progress', ({ detail }) => {
         const loadBar = document.getElementById('load-bar');
-        console.log(detail);
-        console.log(loadBar);
         loadBar.style.width = detail.progress + '%';
       });
     </script>
