@@ -20,3 +20,12 @@ export interface RouteChangeData {
 }
 
 export type FlameWindow = Window & typeof globalThis & { flamethrower: Router };
+
+export type FetchProgressEvent = {
+  /** Percentage of bytes that have been sent as a percentage e.g. 100% -> 100, 50% -> 50 */
+  progress: number;
+  /** Number of bytes that have been received */
+  received: number;
+  /** Number of bytes total (Content-Length header) */
+  length: number;
+};

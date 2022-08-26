@@ -1,4 +1,4 @@
-import { FlamethrowerOptions, RouteChangeData } from './interfaces';
+import { FetchProgressEvent, FlamethrowerOptions, RouteChangeData } from './interfaces';
 import { addToPushState, handleLinkClick, handlePopState, scrollToTop } from './handlers';
 import { mergeHead, formatNextDocument, replaceBody, runScripts } from './dom';
 
@@ -178,7 +178,48 @@ export class Router {
         addToPushState(next);
 
         // Fetch next document
-        const res = await fetch(next, { headers: { 'X-Flamethrower': '1' } });
+        const res = await fetch(next, { headers: { 'X-Flamethrower': '1' } })
+          .then((res) => {
+            const reader = res.body.getReader();
+            const length = parseInt(res.headers.get('Content-Length'));
+            let bytesReceived = 0;
+
+            // take each received chunk and emit an event, pass through to new stream which will be read as text
+            return new ReadableStream({
+              start(controller) {
+                // The following function handles each data chunk
+                function push() {
+                  // "done" is a Boolean and value a "Uint8Array"
+                  reader.read().then(({ done, value }) => {
+                    // If there is no more data to read
+                    if (done) {
+                      controller.close();
+                      return;
+                    }
+
+                    bytesReceived += value.length;
+                    window.dispatchEvent(
+                      new CustomEvent<FetchProgressEvent>('flamethrower:router:fetch-progress', {
+                        detail: {
+                          // length may be NaN if no Content-Length header was found
+                          progress: Number.isNaN(length) ? 0 : (bytesReceived / length) * 100,
+                          received: bytesReceived,
+                          length: length || 0,
+                        },
+                      }),
+                    );
+                    // Get the data and send it to the browser via the controller
+                    controller.enqueue(value);
+                    // Check chunks by logging to the console
+                    push();
+                  });
+                }
+
+                push();
+              },
+            });
+          })
+          .then((stream) => new Response(stream, { headers: { 'Content-Type': 'text/html' } }));
         const html = await res.text();
         const nextDoc = formatNextDocument(html);
 

@@ -44,6 +44,7 @@ router.forward();
 
 // Listen to events
 window.addEventListener('flamethrower:router:fetch', showLoader);
+window.addEventListener('flamethrower:router:fetch-progress', updateProgressBar);
 window.addEventListener('flamethrower:router:end', hideLoader);
 
 // Disable it
@@ -60,6 +61,17 @@ Scripts in `<body>` will run on every page change, but you can force scripts in 
 
 ```html
 <script src="..." data-reload></script>
+```
+
+The fetch-progress event is a custom event, so usage will look something like this:
+```js
+window.addEventListener('flamethrower:router:fetch-progress', ({ detail }) => {
+	const progressBar = document.getElementById('progress-bar');
+	// progress & length will be 0 if there is no Content-Length header
+	const bytesReceived = detail.received; // number
+	const length = detail.length; // number
+	progressBar.style.width = detail.progress + '%';
+});
 ```
 
 ### Prefetching
