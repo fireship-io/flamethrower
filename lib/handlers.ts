@@ -29,9 +29,11 @@ export function addToPushState(url: string): void {
   }
 }
 
-// Smooth stroll to anchor link
-export function scrollToAnchor(anchor): void {
-  document.querySelector(anchor).scrollIntoView({ behavior: 'smooth', block: 'start' });
+// Smooth scroll to anchor link
+export function scrollToAnchor(anchor) {
+  document
+    .querySelector(anchor)
+    .scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
 /**
