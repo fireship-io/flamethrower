@@ -4,7 +4,7 @@ import { RouteChangeData } from './interfaces';
  * @param  {} type
  * scroll to top of page
  */
-export function scrollToTop(type: string) {
+export function scrollToTop(type: string): void {
   if (['link', 'go'].includes(type)) {
     window.scrollTo({ top: 0 });
   }
@@ -14,7 +14,7 @@ export function scrollToTop(type: string) {
  * standard formatting for urls
  * url == https://example.com/foo/bar
  */
-export function fullURL(url?: string) {
+export function fullURL(url?: string): string {
   const href = new URL(url || window.location.href).href;
   return href.endsWith('/') || href.includes('.') ? href : `${href}/`;
 }
@@ -23,13 +23,13 @@ export function fullURL(url?: string) {
  * @param  {string} url
  * Writes URL to browser history
  */
-export function addToPushState(url: string) {
+export function addToPushState(url: string): void {
   if (!window.history.state || window.history.state.url !== url) {
     window.history.pushState({ url }, 'internalLink', url);
   }
 }
 
-// Smooth stroll to anchor link
+// Smooth scroll to anchor link
 export function scrollToAnchor(anchor) {
   document
     .querySelector(anchor)
@@ -41,7 +41,7 @@ export function scrollToAnchor(anchor) {
  * @returns RouteChangeData
  * Handles back button/forward
  */
-export function handlePopState(e: PopStateEvent): RouteChangeData {
+export function handlePopState(_: PopStateEvent): RouteChangeData {
   const next = fullURL();
   // addToPushState(next);
   return { type: 'popstate', next };
@@ -60,11 +60,7 @@ export function handleLinkClick(e: MouseEvent): RouteChangeData {
   }
 
   // Find element containing href
-  for (
-    var n = e.target as HTMLElement;
-    n.parentNode;
-    n = n.parentNode as HTMLElement
-  ) {
+  for (let n = e.target as HTMLElement; n.parentNode; n = n.parentNode as HTMLElement) {
     if (n.nodeName === 'A') {
       anchor = n as HTMLAnchorElement;
       break;
@@ -101,7 +97,6 @@ export function handleLinkClick(e: MouseEvent): RouteChangeData {
 
     // addToPushState(next);
     return { type: 'link', next, prev };
-
   } else {
     return { type: 'noop' };
   }

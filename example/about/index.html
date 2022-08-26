@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="icon" href="/favicon.ico" type="image/png" />
+    <link rel="icon" href="../favicon.ico" type="image/png" />
     <meta name="description" content="The About Page" />
     <meta name="extra" content="test" />
     <title>About</title>
@@ -20,9 +20,18 @@
       #heading {
         color: blue;
       }
+      #load-bar {
+        background-color: blue;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 0;
+        height: 5px;
+      }
     </style>
   </head>
   <body>
+    <div id="load-bar"></div>
     <h1 id="heading">About</h1>
     <a href="/">Home</a> | <a href="#chapter">Heading</a> | <a href="https://google.com">External</a> |
     <button id="go">Go</button>
@@ -52,6 +61,15 @@
     <script>
       console.log('body script');
       document.getElementById('bodyCheck').innerText = '✔️ body script works';
+    </script>
+    <script>
+      // test content length progress
+      window.addEventListener('flamethrower:router:fetch-progress', ({ detail }) => {
+        const loadBar = document.getElementById('load-bar');
+        console.log(detail);
+        console.log(loadBar);
+        loadBar.style.width = detail.progress + '%';
+      });
     </script>
   </body>
 </html>
