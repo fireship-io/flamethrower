@@ -18,7 +18,7 @@ Rather than requiring a frontend framework to take control of the entire DOM, th
 
 This means you can have long-lived JavaScript behaviors between navigations. It works especially well with native web components.
 
-## QuickStart
+## Quick Start
 
 ```
 npm i flamethrower-router
