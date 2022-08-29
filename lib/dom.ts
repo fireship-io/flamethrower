@@ -8,10 +8,40 @@ export function formatNextDocument(html: string): Document {
 }
 
 /**
+ * @param {Element} target
+ * @param {Element} source
+ * Clone Attributes to new Node
+ */
+function cloneAttributes(target: Element, source: Element) {
+  Array.from(source.attributes).forEach((attr) => {
+    target.setAttribute(attr.nodeName, attr.nodeValue);
+  });
+}
+
+/**
  * @param  {Document} nextDoc
  * Replace Body
  */
 export function replaceBody(nextDoc: Document): void {
+  const nodesToPreserve = document.body.querySelectorAll('[flamethrower-preserve]');
+  nodesToPreserve.forEach((oldDocElement) => {
+    let nextDocElement = nextDoc.body.querySelector('[flamethrower-preserve][id="' + oldDocElement.id + '"]');
+    if (nextDocElement) {
+      // same element found in next doc
+
+      // copy attributes
+      cloneAttributes(oldDocElement, nextDocElement);
+
+      // copy new child nodes
+      while (oldDocElement.firstChild) {
+        oldDocElement.removeChild(oldDocElement.firstChild);
+      }
+      nextDocElement.childNodes.forEach((node) => oldDocElement.appendChild(node));
+
+      nextDocElement.replaceWith(oldDocElement);
+    }
+  });
+
   document.body.replaceWith(nextDoc.body);
 }
 
