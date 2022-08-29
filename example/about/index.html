@@ -36,6 +36,14 @@
     <a href="/">Home</a> | <a href="#chapter">Heading</a> | <a href="https://google.com">External</a> |
     <button id="go">Go</button>
     <button id="back">Back</button>
+
+    <div id="keep" flamethrower-preserve>
+      <article>
+        <p>This text should be preserved when starting from about</p>
+      </article> 
+    </div>
+
+
     <script type="module">
       const router = window.flamethrower;
       document.getElementById('go').onclick = () => {

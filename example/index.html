@@ -30,7 +30,13 @@
     <div id="load-bar"></div>
     <h1 id="heading">Home</h1>
     <a href="/">Home</a> | <a id="about" href="/about">About</a> |
-    <!-- <a id="test" data-cold href="/test">Test</a> #} -->
+
+    <div id="keep" flamethrower-preserve>
+      <article>
+        <p>This text should be preserved when starting from home</p>
+      </article> 
+    </div>
+
     <script>
       // test
       window.addEventListener('flamethrower:router:fetch-progress', ({ detail }) => {
