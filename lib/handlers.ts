@@ -74,7 +74,7 @@ export function handleLinkClick(e: MouseEvent): RouteChangeData {
   }
 
   // User opt-out
-  if (anchor && 'cold' in anchor?.dataset) {
+  if (anchor && anchor?.closest('[data-cold]')) {
     return { type: 'disqualified' };
   }
 
