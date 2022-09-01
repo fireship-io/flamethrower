@@ -1,19 +1,46 @@
 {
   "parser": "@typescript-eslint/parser",
   "extends": ["plugin:sonarjs/recommended", "plugin:@typescript-eslint/recommended", "prettier", "plugin:prettier/recommended"],
+  "plugins": ["sonarjs", "prettier"],
+
+  "rules": {
+    "@typescript-eslint/no-namespace": "off",
+    "@typescript-eslint/interface-name-prefix": "off",
+    "@typescript-eslint/no-parameter-properties": "off",
+    "@typescript-eslint/member-ordering": "off",
+    "@typescript-eslint/comma-dangle": "off",
+
+    "sonarjs/cognitive-complexity": ["warn"],
+
+    "indent": "off",
+    "no-useless-constructor": "error",
+    "no-unreachable": "error",
+    "no-warning-comments": "warn",
+    "no-console": "warn",
+    "no-return-await": "warn",
+    "no-await-in-loop": "off",
+    "eol-last": ["warn", "always"],
+    "linebreak-style": ["error", "unix"],
+    "eqeqeq": "error",
+    "semi": "off",
+    "quotes": ["error", "single"],
+    "comma-dangle": "off",
+
+    "no-trailing-spaces": [
+      "warn",
+      {
+        "ignoreComments": true
+      }
+    ]
+  },
 
   "overrides": [
     {
       "files": ["*.ts"],
       "rules": {
-        "@typescript-eslint/no-namespace": "off",
-        "@typescript-eslint/interface-name-prefix": "off",
-        "@typescript-eslint/no-parameter-properties": "off",
         "@typescript-eslint/no-require-imports": "warn",
         "@typescript-eslint/no-var-requires": "warn",
         "@typescript-eslint/semi": ["error"],
-        "@typescript-eslint/member-ordering": ["off"],
-        "@typescript-eslint/comma-dangle": "off",
 
         "@typescript-eslint/explicit-function-return-type": [
           "warn",
@@ -59,7 +86,7 @@
             },
             "singleline": {
               "delimiter": "semi",
-              "requireLast": true
+              "requireLast": false
             }
           }
         ],
@@ -69,72 +96,21 @@
           {
             "SwitchCase": 1
           }
-        ],
-
-        "no-trailing-spaces": [
-          "warn",
-          {
-            "ignoreComments": true
-          }
-        ],
-
-        "sonarjs/cognitive-complexity": ["warn"],
-
-        "indent": "off",
-        "no-useless-constructor": "error",
-        "no-unreachable": "error",
-        "no-warning-comments": "warn",
-        "no-console": "warn",
-        "no-return-await": "warn",
-        "no-await-in-loop": "off",
-        "eol-last": ["warn", "always"],
-        "linebreak-style": ["error", "unix"],
-        "eqeqeq": "error",
-        "semi": "off",
-        "quotes": ["error", "single"],
-        "comma-dangle": "off"
+        ]
       }
     },
     {
       "files": ["*.js"],
       "rules": {
-        "@typescript-eslint/no-namespace": "off",
-        "@typescript-eslint/interface-name-prefix": "off",
-        "@typescript-eslint/no-parameter-properties": "off",
-        "@typescript-eslint/no-require-imports": "warn",
+        "@typescript-eslint/no-require-imports": "off",
         "@typescript-eslint/explicit-function-return-type": "off",
         "@typescript-eslint/explicit-member-accessibility": "off",
         "@typescript-eslint/no-unused-vars": "off",
         "@typescript-eslint/no-var-requires": "off",
         "@typescript-eslint/no-empty-interface": "off",
         "@typescript-eslint/semi": "off",
-        "@typescript-eslint/member-ordering": "off",
         "@typescript-eslint/member-delimiter-style": "off",
-        "@typescript-eslint/indent": "off",
-        "@typescript-eslint/comma-dangle": "off",
-
-        "no-trailing-spaces": [
-          "warn",
-          {
-            "ignoreComments": true
-          }
-        ],
-
-        "sonarjs/cognitive-complexity": ["warn"],
-
-        "indent": "off",
-        "no-useless-constructor": "error",
-        "no-unreachable": "error",
-        "no-warning-comments": "warn",
-        "no-console": "warn",
-        "no-return-await": "warn",
-        "no-await-in-loop": "off",
-        "eol-last": ["warn", "always"],
-        "linebreak-style": ["error", "unix"],
-        "eqeqeq": "error",
-        "semi": "off",
-        "quotes": ["error", "single"],
-        "comma-dangle": "off"
+        "@typescript-eslint/indent": "off"
       }
     }
   ]
