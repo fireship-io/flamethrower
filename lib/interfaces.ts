@@ -17,6 +17,7 @@ export interface RouteChangeData {
   type: 'link' | 'popstate' | 'noop' | 'disqualified' | 'scroll' | 'go' | string;
   next?: string;
   prev?: string;
+  scrollId?: string;
 }
 
 export type FlameWindow = Window & typeof globalThis & { flamethrower: Router };

@@ -1,5 +1,5 @@
 import { FetchProgressEvent, FlamethrowerOptions, RouteChangeData } from './interfaces';
-import { addToPushState, handleLinkClick, handlePopState, scrollToTop } from './handlers';
+import { addToPushState, handleLinkClick, handlePopState, scrollTo } from './handlers';
 import { mergeHead, formatNextDocument, replaceBody, runScripts } from './dom';
 
 const defaultOpts = {
@@ -158,7 +158,7 @@ export class Router {
    * @param  {RouteChangeData} routeChangeData
    * Main process for reconstructing the DOM
    */
-  private async reconstructDOM({ type, next, prev }: RouteChangeData): Promise<boolean> {
+  private async reconstructDOM({ type, next, prev, scrollId }: RouteChangeData): Promise<boolean> {
     if (!this.enabled) {
       this.log('router disabled');
       return;
@@ -222,6 +222,7 @@ export class Router {
             });
           })
           .then((stream) => new Response(stream, { headers: { 'Content-Type': 'text/html' } }));
+
         const html = await res.text();
         const nextDoc = formatNextDocument(html);
 
@@ -235,14 +236,14 @@ export class Router {
           transition.start(() => {
             replaceBody(nextDoc);
             runScripts();
+            scrollTo(type, scrollId);
           });
         } else {
           replaceBody(nextDoc);
           runScripts();
+          scrollTo(type, scrollId);
         }
 
-        // handle scroll
-        scrollToTop(type);
 
         window.dispatchEvent(new CustomEvent('flamethrower:router:end'));
 
