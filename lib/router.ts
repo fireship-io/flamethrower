@@ -12,6 +12,9 @@ export class Router {
   private prefetched = new Set<string>();
   private observer: IntersectionObserver;
 
+  // Announces the current page title to screen readers
+  private announcer: HTMLDivElement;
+
   constructor(public opts?: FlamethrowerOptions) {
     this.opts = { ...defaultOpts, ...(opts ?? {}) };
 
@@ -19,6 +22,7 @@ export class Router {
       document.addEventListener('click', (e) => this.onClick(e));
       window.addEventListener('popstate', (e) => this.onPop(e));
       this.prefetch();
+      this.announcePageChanged();
     } else {
       console.warn('flamethrower router not supported in this browser or environment');
       this.enabled = false;
@@ -247,6 +251,8 @@ export class Router {
 
         window.dispatchEvent(new CustomEvent('flamethrower:router:end'));
 
+        this.announcePageChanged();
+
         // delay for any js rendered links
         setTimeout(() => {
           this.prefetch();
@@ -260,5 +266,22 @@ export class Router {
       console.error('💥 router fetch failed', err);
       return false;
     }
+  }
+  /**
+   * Announces the current page title to screen readers
+   */
+  private announcePageChanged(): void {
+    if (!this.announcer) {
+      this.announcer = document.createElement('div');
+      this.announcer.setAttribute('id', 'flamethrower-announcer');
+      this.announcer.setAttribute('aria-live', 'assertive');
+      this.announcer.setAttribute('aria-atomic', 'true');
+      this.announcer.setAttribute(
+        'style',
+        'position: absolute; left: 0; top: 0; clip: rect(0 0 0 0); clip-path: inset(50%); overflow: hidden; white-space: nowrap; width: 1px; height: 1px'
+      );
+    }
+    this.announcer.textContent = document.title;
+    document.body.appendChild(this.announcer);
   }
 }
