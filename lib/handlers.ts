@@ -1,12 +1,18 @@
 import { RouteChangeData } from './interfaces';
 
 /**
- * @param  {} type
- * scroll to top of page
+ * @param  {string} type
+ * @param  {string} id
+ * scroll to position on next page
  */
-export function scrollToTop(type: string) {
+export function scrollTo(type: string, id?: string): void {
   if (['link', 'go'].includes(type)) {
-    window.scrollTo({ top: 0 });
+    if (id) {
+      const el = document.querySelector(id);
+      el ? el.scrollIntoView({ behavior: 'smooth', block: 'start' }) : window.scrollTo({ top: 0 });
+    } else {
+      window.scrollTo({ top: 0 });
+    }
   }
 }
 /**
@@ -14,22 +20,22 @@ export function scrollToTop(type: string) {
  * standard formatting for urls
  * url == https://example.com/foo/bar
  */
-export function fullURL(url?: string) {
+export function fullURL(url?: string): string {
   const href = new URL(url || window.location.href).href;
-  return href.endsWith('/') || href.includes('.') ? href : `${href}/`;
+  return href.endsWith('/') || href.includes('.') || href.includes('#') ? href : `${href}/`;
 }
 
 /**
  * @param  {string} url
  * Writes URL to browser history
  */
-export function addToPushState(url: string) {
+export function addToPushState(url: string): void {
   if (!window.history.state || window.history.state.url !== url) {
     window.history.pushState({ url }, 'internalLink', url);
   }
 }
 
-// Smooth stroll to anchor link
+// Smooth scroll to anchor link
 export function scrollToAnchor(anchor) {
   document
     .querySelector(anchor)
@@ -41,7 +47,7 @@ export function scrollToAnchor(anchor) {
  * @returns RouteChangeData
  * Handles back button/forward
  */
-export function handlePopState(e: PopStateEvent): RouteChangeData {
+export function handlePopState(_: PopStateEvent): RouteChangeData {
   const next = fullURL();
   // addToPushState(next);
   return { type: 'popstate', next };
@@ -60,11 +66,7 @@ export function handleLinkClick(e: MouseEvent): RouteChangeData {
   }
 
   // Find element containing href
-  for (
-    var n = e.target as HTMLElement;
-    n.parentNode;
-    n = n.parentNode as HTMLElement
-  ) {
+  for (let n = e.target as HTMLElement; n.parentNode; n = n.parentNode as HTMLElement) {
     if (n.nodeName === 'A') {
       anchor = n as HTMLAnchorElement;
       break;
@@ -96,12 +98,13 @@ export function handleLinkClick(e: MouseEvent): RouteChangeData {
       return { type: 'scrolled' };
     }
 
+    // ID to scroll to after navigation, like /route/#some-id
+    const scrollId = ahref.match(/#([\w'-]+)\b/g)?.[0];
     const next = fullURL(url.href);
     const prev = fullURL();
 
     // addToPushState(next);
-    return { type: 'link', next, prev };
-
+    return { type: 'link', next, prev, scrollId };
   } else {
     return { type: 'noop' };
   }

@@ -1,28 +1,49 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" href="favicon.ico" type="image/png">
-    <meta name="description" content="The Home Page">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" href="favicon.ico" type="image/png" />
+    <meta name="description" content="The Home Page" />
     <title>Flamethrower</title>
     <script defer type="module">
-        import flamethrower from '/flamethrower.js';
-        flamethrower({ prefetch: 'visible', log: true, pageTransitions: true });
+      import flamethrower from '/flamethrower.js';
+      flamethrower({ prefetch: 'visible', log: true, pageTransitions: true });
     </script>
 
     <style>
-        #heading {
-            color: red;
-        }
+      #heading {
+        color: red;
+      }
+      #load-bar {
+        background-color: blue;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 0;
+        height: 5px;
+      }
     </style>
-
-</head>
-<body>
+  </head>
+  <body>
+    <div id="load-bar"></div>
     <h1 id="heading">Home</h1>
-    <a href="/">Home</a> |
-    <a id="about" href="/about">About</a> |
-    <!-- <a id="test" data-cold href="/test">Test</a> #} -->
-</body>
+    <a href="/">Home</a> | <a id="about" href="/about">About</a>
+
+    <div id="keep" flamethrower-preserve>
+      <article>
+        <p>This text should be preserved when starting from home</p>
+      </article> 
+    </div>
+
+    <script>
+      // test
+      window.addEventListener('flamethrower:router:fetch-progress', ({ detail }) => {
+        const loadBar = document.getElementById('load-bar');
+        console.log('Fetch Progress:', detail);
+        loadBar.style.width = detail.progress + '%';
+      });
+    </script>
+  </body>
 </html>

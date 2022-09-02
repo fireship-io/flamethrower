@@ -1,6 +1,6 @@
 {
   "name": "flamethrower-router",
-  "version": "0.0.0-meme.8",
+  "version": "0.0.0-meme.12",
   "description": "Blazingly fast SPA-like router for static sites",
   "main": "dist/main.js",
   "types": "dist/main.d.ts",
@@ -14,7 +14,8 @@
     "dev": "vite build --watch",
     "build": "vite build && npx tsc --emitDeclarationOnly",
     "serve": "serve ./example",
-    "test": "playwright test"
+    "test": "playwright test",
+    "deploy": "node ./deploy-vercel.mjs && vercel deploy --prebuilt"
   },
   "keywords": [],
   "author": "Jeff Delaney",
