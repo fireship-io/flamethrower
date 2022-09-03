@@ -1,9 +1,9 @@
 # prefetchOnHover method
 
 ```js
-private prefetchOnHover() {}
+private prefetchOnHover(): void {}
 ```
 
 Finds links on page and prefetches them on hover.
 
-Takes no arguments and returns type `any`. Is private.
+Takes no arguments and returns type `void`. Is private

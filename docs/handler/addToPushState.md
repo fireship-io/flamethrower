@@ -1,10 +1,9 @@
 # addToPushState
 
 ```js
-export function addToPushState(url: string) {}
+export function addToPushState(url: string): void {}
 ```
 
-Writes URL to browser history. 
+Writes URL to browser history
 
-
-Takes `url` argument with type `string` and returns type `any`.
+Takes `url` argument with type `string` and returns type `string`

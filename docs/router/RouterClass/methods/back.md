@@ -1,9 +1,9 @@
 # back method
 
 ```js
-back() {}
+public back(): void {}
 ```
 
 Navigates back.
 
-Takes no arguments and returns type `any`.
+Takes no arguments and returns type `void`. Is public

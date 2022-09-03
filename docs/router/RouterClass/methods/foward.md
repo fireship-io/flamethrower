@@ -1,9 +1,9 @@
 # forward method
 
 ```js
-forward() {}
+public forward(): void {}
 ```
 
 Navigates forward
 
-Takes no arguments and returns type `any`.
+Takes no arguments and returns type `void`. Is public

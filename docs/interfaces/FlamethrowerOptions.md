@@ -4,6 +4,6 @@
 export interface FlamethrowerOptions{}
 ```
 
-Flamethrower options. 
+Flamethrower options
 
-Exports an interface.
+Exports an interface

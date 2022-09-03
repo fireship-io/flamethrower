@@ -1,9 +1,9 @@
 # allLinks method
 
 ```js
-private get allLinks() {}
+private get allLinks(): (HTMLAnchorElement | HTMLAreaElement)[] {}
 ```
 
 Find all links on page
 
-Takes no arguments and returns type `any`. Is private.
+Takes no arguments and returns type `HTMLAnchorElement` or `HTMLAreaElement`. Is private.

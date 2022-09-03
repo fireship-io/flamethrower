@@ -1,9 +1,9 @@
 # prefetch method
 
 ```js
-private prefetch() {}
+private prefetch(): void {}
 ```
 
 Check if the route is qualified for prefetching and prefetch it with chosen method.
 
-Takes no arguments and returns type `any`. Is private.
+Takes no arguments and returns type `void`. Is private
