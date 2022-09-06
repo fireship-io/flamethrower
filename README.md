@@ -8,7 +8,7 @@ A 2kB zero-config router and prefetcher that makes a static site feel like a bla
 
 **Problem:** Static sites feel slow and cannot easily share state between pages. This makes it difficult to create a pleasant user experience (UX) with JavaScript libraries because each new page needs to reboot your JS from scratch.
 
-Rather than requiring a frontend framework to take control of the entire DOM, the goal is to make route changes on static sites feel faster, like a SPA.
+Rather than requiring a frontend framework to take control of the entire DOM, the goal is to make route changes on static sites feel faster, like an SPA.
 
 ## How?
 
@@ -18,7 +18,7 @@ Rather than requiring a frontend framework to take control of the entire DOM, th
 
 This means you can have long-lived JavaScript behaviors between navigations. It works especially well with native web components.
 
-## QuickStart
+## Quickstart
 
 ```
 npm i flamethrower-router
