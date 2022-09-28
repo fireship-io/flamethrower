@@ -1,6 +1,7 @@
 import { FetchProgressEvent, FlamethrowerOptions, RouteChangeData } from './interfaces';
 import { addToPushState, handleLinkClick, handlePopState, scrollTo } from './handlers';
 import { mergeHead, formatNextDocument, replaceBody, runScripts } from './dom';
+import { dispatchEvent } from './utils';
 
 const defaultOpts = {
   log: false,
@@ -172,7 +173,7 @@ export class Router {
       if (['popstate', 'link', 'go'].includes(type) && next !== prev) {
         this.opts.log && console.time('⏱️');
 
-        window.dispatchEvent(new CustomEvent('flamethrower:router:fetch'));
+        dispatchEvent('router:fetch');
 
         // Update window history
         if (type != 'popstate') {
@@ -200,16 +201,13 @@ export class Router {
                     }
 
                     bytesReceived += value.length;
-                    window.dispatchEvent(
-                      new CustomEvent<FetchProgressEvent>('flamethrower:router:fetch-progress', {
-                        detail: {
-                          // length may be NaN if no Content-Length header was found
-                          progress: Number.isNaN(length) ? 0 : (bytesReceived / length) * 100,
-                          received: bytesReceived,
-                          length: length || 0,
-                        },
-                      }),
-                    );
+        
+                    dispatchEvent<FetchProgressEvent>('router:fetch-progress', {
+                        // length may be NaN if no Content-Length header was found
+                        progress: Number.isNaN(length) ? 0 : (bytesReceived / length) * 100,
+                        received: bytesReceived,
+                        length: length || 0,
+                    })
                     // Get the data and send it to the browser via the controller
                     controller.enqueue(value);
                     // Check chunks by logging to the console
@@ -245,7 +243,7 @@ export class Router {
         }
 
 
-        window.dispatchEvent(new CustomEvent('flamethrower:router:end'));
+        dispatchEvent('router:end');
 
         // delay for any js rendered links
         setTimeout(() => {
@@ -255,7 +253,8 @@ export class Router {
         this.opts.log && console.timeEnd('⏱️');
       }
     } catch (err) {
-      window.dispatchEvent(new CustomEvent('flamethrower:router:error', err));
+      dispatchEvent('router:error', err);
+
       this.opts.log && console.timeEnd('⏱️');
       console.error('💥 router fetch failed', err);
       return false;
