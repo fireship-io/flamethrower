@@ -6,7 +6,7 @@ A 2kB zero-config router and prefetcher that makes a static site feel like a bla
 
 ## Why?
 
-**Problem:** Static sites feel slow and cannot easily share state between pages. This makes it difficult to create a pleasant user experience (UX) with JavaScript libraries because each new page needs to reboot your JS from scratch.
+**Problem:** Static sites feel slow and cannot easily share their state between pages. This makes it difficult to create a pleasant user experience (UX) with JavaScript libraries because each new page needs to reboot your JS from scratch.
 
 Rather than requiring a frontend framework to take control of the entire DOM, the goal is to make route changes on static sites feel faster, like a SPA.
 
@@ -29,7 +29,7 @@ import flamethrower from 'flamethrower-router';
 const router = flamethrower();
 ```
 
-That's it. Your site now feels blazingly fast.
+That's it. Your site now feels (and is) blazingly fast.
 
 ## Advanced Usage
 
