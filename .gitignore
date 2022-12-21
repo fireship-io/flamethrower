@@ -74,3 +74,5 @@ firebase.json
 # vercel build output api
 # https://vercel.com/docs/build-output-api/v3
 .vercel
+
+pnpm-lock.yaml

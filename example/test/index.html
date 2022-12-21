@@ -6,10 +6,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" href="../favicon.ico" type="image/png" />
     <title>Test Page</title>
+    <!--
     <script defer type="module">
       import flamethrower from '/flamethrower.js';
-      flamethrower({ prefetch: 'visible', log: true, pageTransitions: true });
+      const router = flamethrower({ prefetch: 'visible', log: true, pageTransitions: true });
     </script>
+    -->
+    <script defer type="module" src="/main.js"></script>
     <style>
       #load-bar {
         background-color: blue;
@@ -26,6 +29,8 @@
     <h1 id="heading">Test Page</h1>
     <a href="/">home</a>
     <a href="/about">about</a>
+    <p class="multi-route"></p>
+    <p id="global-check"></p>
     <script>
       // test
       window.addEventListener('flamethrower:router:fetch-progress', ({ detail }) => {

@@ -4,15 +4,18 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="icon" href="../favicon.ico" type="image/png" />
+    <link rel="icon" href="/favicon.ico" type="image/png" />
     <meta name="description" content="The About Page" />
     <meta name="extra" content="test" />
     <title>About</title>
+    <!--
     <script defer type="module">
       import flamethrower from '/flamethrower.js';
-      flamethrower({ prefetch: 'visible', log: true, pageTransitions: true });
+      const router = flamethrower({ prefetch: 'visible', log: true, pageTransitions: true });
     </script>
+    -->
 
+    <script defer type="module" src="/main.js"></script>
     <script defer data-reload src="/script1.js"></script>
     <script defer src="/script2.js"></script>
 
@@ -40,7 +43,7 @@
     <div id="keep" flamethrower-preserve>
       <article>
         <p>This text should be preserved when starting from about</p>
-      </article> 
+      </article>
     </div>
 
 
@@ -57,6 +60,10 @@
     <p>Scripts from body or head with data-reload attr should always run</p>
     <p id="bodyCheck"></p>
     <p id="headCheck"></p>
+    <p id="subscriberCheck"></p>
+    <p class="multi-route"></p>
+    <p id="subscriberCount"></p>
+    <p id="global-check"></p>
     <p id="headCheck2">default text</p>
 
     <div style="margin-top: 1000px"></div>

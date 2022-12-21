@@ -1,5 +1,9 @@
 import { Router } from './router';
 
+export interface Subscription {
+    (): void | Promise<void>;
+}
+
 export interface FlamethrowerOptions {
   log?: boolean;
   /**
