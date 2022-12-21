@@ -2,7 +2,7 @@
 
 Status: Meme
 
-A 2kB zero-config router and prefetcher that makes a static site feel like a blazingly fast SPA.
+A 3kB zero-config router and prefetcher that makes a static site feel like a blazingly fast SPA.
 
 ## Why?
 
@@ -49,6 +49,10 @@ window.addEventListener('flamethrower:router:end', hideLoader);
 
 // Disable it
 router.enabled = false;
+
+// Subscribe/unsubscribe specific routes to function
+router.subscribe(['<route>'], <function name>);
+router.unsubscribe('<route>', <function name>);
 ```
 
 Opt-out of specific links for full page load.
@@ -84,6 +88,40 @@ Prefecthing is disabled by default.
 ```js
 const router = flamethrower({ prefetch: 'visible' });
 ```
+
+### route subscriptions
+
+the router class extends the routerdata class, which has the subscribe method
+
+see example/main.js for some more complex use cases
+
+```js
+router.subscribe(['/logme/', '/'], <function name>);
+router.unsubscribe('/', <function name>);
+
+function logMe() {
+    console.log('hi mom');
+}
+
+// Subscribe all routes to function
+router.subscribe(['*'], logMe);
+
+// only call function once
+// ie to create a closure over multiple subscriptions
+router.subscribe(['**'], closeMe);
+function closeMe() {
+    router.subscribe(['/false/'], falseMe);
+    router.subscribe(['/true/'], trueMe);
+    let val = true;
+    function falseMe() {
+        val = false;
+    }
+    function trueMe() {
+        val = true;
+    }
+}
+```
+
 
 ### Misc
 

@@ -7,10 +7,13 @@
     <link rel="icon" href="favicon.ico" type="image/png" />
     <meta name="description" content="The Home Page" />
     <title>Flamethrower</title>
+    <!--
     <script defer type="module">
       import flamethrower from '/flamethrower.js';
-      flamethrower({ prefetch: 'visible', log: true, pageTransitions: true });
+      const router = flamethrower({ prefetch: 'visible', log: true, pageTransitions: true });
     </script>
+    -->
+    <script defer type="module" src="/main.js"></script>
 
     <style>
       #heading {
@@ -34,8 +37,11 @@
     <div id="keep" flamethrower-preserve>
       <article>
         <p>This text should be preserved when starting from home</p>
-      </article> 
+      </article>
     </div>
+
+    <p id="unsub-check"></p>
+    <p id="global-check"></p>
 
     <script>
       // test

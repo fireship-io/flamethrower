@@ -1,3 +1,4 @@
+import { RouterData } from './routerdata';
 import { FetchProgressEvent, FlamethrowerOptions, RouteChangeData } from './interfaces';
 import { addToPushState, handleLinkClick, handlePopState, scrollTo } from './handlers';
 import { mergeHead, formatNextDocument, replaceBody, runScripts } from './dom';
@@ -7,12 +8,13 @@ const defaultOpts = {
   pageTransitions: false,
 };
 
-export class Router {
+export class Router extends RouterData {
   public enabled = true;
   private prefetched = new Set<string>();
   private observer: IntersectionObserver;
 
   constructor(public opts?: FlamethrowerOptions) {
+    super();
     this.opts = { ...defaultOpts, ...(opts ?? {}) };
 
     if (window?.history) {
@@ -244,6 +246,7 @@ export class Router {
           scrollTo(type, scrollId);
         }
 
+        this.notify();
 
         window.dispatchEvent(new CustomEvent('flamethrower:router:end'));
 
