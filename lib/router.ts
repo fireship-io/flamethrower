@@ -1,5 +1,5 @@
-import { FetchProgressEvent, FlamethrowerOptions, RouteChangeData } from './interfaces';
-import { addToPushState, handleLinkClick, handlePopState, scrollTo } from './handlers';
+import { FetchProgressEvent, FlamethrowerOptions, NavigationOptions, RouteChangeData, RouterQuery } from './interfaces';
+import { addToPushState, getParsedQuery, handleLinkClick, handlePopState, parseQueryToString, scrollTo } from './handlers';
 import { mergeHead, formatNextDocument, replaceBody, runScripts } from './dom';
 
 const defaultOpts = {
@@ -11,6 +11,7 @@ export class Router {
   public enabled = true;
   private prefetched = new Set<string>();
   private observer: IntersectionObserver;
+  public query: RouterQuery;
 
   constructor(public opts?: FlamethrowerOptions) {
     this.opts = { ...defaultOpts, ...(opts ?? {}) };
@@ -23,15 +24,20 @@ export class Router {
       console.warn('flamethrower router not supported in this browser or environment');
       this.enabled = false;
     }
+
+    this.getQueryParams();
   }
 
   /**
    * @param  {string} path
    * Navigate to a url
+   * @param {NavigationOptions} options
    */
-  public go(path: string): Promise<boolean> {
+  public go(path: string, options?: NavigationOptions): Promise<boolean> {
     const prev = window.location.href;
-    const next = new URL(path, location.origin).href;
+    const query = options?.query ? parseQueryToString(options.query) : '';
+    const newPath = `${path}?${query}`;
+    const next = new URL(newPath, location.origin).href;
     return this.reconstructDOM({ type: 'go', next, prev });
   }
 
@@ -131,7 +137,7 @@ export class Router {
     linkEl.as = 'document';
 
     linkEl.onload = () => this.log('🌩️ prefetched', url);
-    linkEl.onerror = (err) => this.log('🤕 can\'t prefetch', url, err);
+    linkEl.onerror = (err) => this.log("🤕 can't prefetch", url, err);
 
     document.head.appendChild(linkEl);
 
@@ -153,6 +159,13 @@ export class Router {
    */
   private onPop(e: PopStateEvent): void {
     this.reconstructDOM(handlePopState(e));
+  }
+  /**
+   * Get query paramaters
+   */
+  private getQueryParams(): void {
+    const query = getParsedQuery();
+    this.query = query;
   }
   /**
    * @param  {RouteChangeData} routeChangeData
@@ -182,6 +195,7 @@ export class Router {
         // Fetch next document
         const res = await fetch(next, { headers: { 'X-Flamethrower': '1' } })
           .then((res) => {
+            this.getQueryParams();
             const reader = res.body.getReader();
             const length = parseInt(res.headers.get('Content-Length'));
             let bytesReceived = 0;
@@ -243,7 +257,6 @@ export class Router {
           runScripts();
           scrollTo(type, scrollId);
         }
-
 
         window.dispatchEvent(new CustomEvent('flamethrower:router:end'));
 

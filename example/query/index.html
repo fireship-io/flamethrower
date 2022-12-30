@@ -12,14 +12,13 @@
       import flamethrower from '/flamethrower.js';
       flamethrower({ prefetch: 'visible', log: true, pageTransitions: true });
     </script>
-
-    <script defer data-reload src="/script1.js"></script>
-    <script defer src="/script2.js"></script>
+    <script defer src="/query.js"></script>
 
     <style>
       #heading {
         color: blue;
       }
+
       #load-bar {
         background-color: blue;
         position: fixed;
@@ -28,19 +27,39 @@
         width: 0;
         height: 5px;
       }
+
+      #contents {
+        width: 100%;
+        margin-top: 15px;
+        padding: 4px;
+        border: 2px solid blue;
+      }
     </style>
   </head>
+
   <body>
     <div id="load-bar"></div>
-    <h1 id="heading">About</h1>
+    <h1 id="heading">Query Example</h1>
     <a href="/">Home</a> | <a href="#chapter">Heading</a> | <a href="https://google.com">External</a> |
     <button id="go">Go</button>
     <button id="back">Back</button>
 
-    <div id="keep" flamethrower-preserve>
-      <article>
-        <p>This text should be preserved when starting from about</p>
-      </article>
+    <h3>Popular Javascript frameworks and libraries</h3>
+    <div class="">
+      <li>
+        <button id="react">React</button>
+        <button id="angular">Angular</button>
+        <button id="vue">Vue</button>
+      </li>
+      <h3>WIth a tags</h3>
+      <li>
+        <a href="/query?lib=react">React</a>
+        <a href="/query?lib=angular">Angular</a>
+        <a href="/query?lib=vue">Vue</a>
+      </li>
+    </div>
+    <div id="contents">
+      <h1 id="cont"></h1>
     </div>
 
     <script type="module">
@@ -50,32 +69,28 @@
       };
 
       document.getElementById('back').onclick = () => router.back();
-    </script>
+      console.log('query', router.query);
 
-    <h3>Scripts</h3>
-    <p>Scripts from body or head with data-reload attr should always run</p>
-    <p id="bodyCheck"></p>
-    <p id="headCheck"></p>
-    <p id="headCheck2">default text</p>
+      document.getElementById('react').onclick = () =>
+        router.go('/query', {
+          query: {
+            lib: 'react',
+          },
+        });
+      document.getElementById('angular').onclick = () =>
+        router.go('/query', {
+          query: {
+            lib: 'angular',
+          },
+        });
+      document.getElementById('vue').onclick = () =>
+        router.go('/query', {
+          query: {
+            lib: 'vue',
+          },
+        });
 
-    <div style="margin-top: 1000px"></div>
-    <h3 id="chapter">Heading</h3>
-    <a href="/">Home</a>
-    <a href="/test">Test</a> |
-
-    <div style="margin-top: 1000px"></div>
-
-    <script>
-      console.log('body script');
-      document.getElementById('bodyCheck').innerText = '✔️ body script works';
-    </script>
-    <script>
-      // test content length progress
-      window.addEventListener('flamethrower:router:fetch-progress', ({ detail }) => {
-        const loadBar = document.getElementById('load-bar');
-        console.log('Fetch Progress:', detail);
-        loadBar.style.width = detail.progress + '%';
-      });
+      document.getElementById('cont').textContent = router.query.lib;
     </script>
   </body>
 </html>

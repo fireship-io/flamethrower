@@ -15,7 +15,8 @@
     "build": "vite build && npx tsc --emitDeclarationOnly",
     "serve": "serve ./example",
     "test": "playwright test",
-    "deploy": "node ./deploy-vercel.mjs && vercel deploy --prebuilt"
+    "deploy": "node ./deploy-vercel.mjs && vercel deploy --prebuilt",
+    "format": "prettier --plugin-search-dir . --write ."
   },
   "keywords": [],
   "author": "Jeff Delaney",
