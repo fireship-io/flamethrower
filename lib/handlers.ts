@@ -1,4 +1,4 @@
-import { RouteChangeData } from './interfaces';
+import { RouteChangeData, RouterQuery } from './interfaces';
 
 /**
  * @param  {string} type
@@ -37,9 +37,7 @@ export function addToPushState(url: string): void {
 
 // Smooth scroll to anchor link
 export function scrollToAnchor(anchor) {
-  document
-    .querySelector(anchor)
-    .scrollIntoView({ behavior: 'smooth', block: 'start' });
+  document.querySelector(anchor).scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
 /**
@@ -108,4 +106,35 @@ export function handleLinkClick(e: MouseEvent): RouteChangeData {
   } else {
     return { type: 'noop' };
   }
+}
+
+export function parseQueryToString(query: RouterQuery): string {
+  let queryString = '';
+  const queryContainer: string[] = [];
+
+  // get the names of queries
+  const queries: string[] = Object.getOwnPropertyNames(query);
+
+  // add equal to every query and add in the array
+  queries.forEach((qname) => {
+    const fullQuery = `${qname}=${query[qname]}`;
+    queryContainer.push(fullQuery);
+  });
+
+  // add & to join queries
+  queryString = queryContainer.join('&');
+
+  return queryString;
+}
+
+export function getParsedQuery(): RouterQuery {
+  const queryString = window.location.search;
+  const urlParams = new URLSearchParams(queryString);
+  const queryObject: RouterQuery = {};
+
+  urlParams.forEach((value, key) => {
+    if (!queryObject[key]) queryObject[key] = value.replace('/', '');
+  });
+
+  return queryObject;
 }

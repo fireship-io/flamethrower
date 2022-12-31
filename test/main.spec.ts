@@ -1,7 +1,6 @@
 import { expect, test } from '@playwright/test';
 
 test('basic navigation works', async ({ page }) => {
-
   await page.goto('/');
   await expect(page).toHaveTitle(/Flamethrower/);
 
@@ -9,15 +8,13 @@ test('basic navigation works', async ({ page }) => {
 
   await about.click();
   await expect(page).toHaveURL('/about/');
-  await expect(page).toHaveTitle(/About/); 
+  await expect(page).toHaveTitle(/About/);
 
   await page.goBack();
   await expect(page).toHaveURL('/');
-
 });
 
 test('only valid scripts should run', async ({ page }) => {
-
   await page.goto('/');
   const about = page.locator('#about');
   await about.click();
@@ -29,12 +26,9 @@ test('only valid scripts should run', async ({ page }) => {
 
   const headCheck2 = page.locator('#headCheck2');
   await expect(headCheck2).toContainText('default text');
-
 });
 
-
 test('navigate programmatically', async ({ page }) => {
-
   await page.goto('/');
   const about = page.locator('#about');
   await about.click();
@@ -42,13 +36,9 @@ test('navigate programmatically', async ({ page }) => {
   const go = page.locator('#go');
   await go.click();
   await expect(page).toHaveURL('/');
-
-
 });
 
-
 test('meta tags are added and removed', async ({ page }) => {
-
   await page.goto('/');
   const about = page.locator('#about');
   await about.click();
@@ -67,37 +57,30 @@ test('meta tags are added and removed', async ({ page }) => {
 
   const extraHome = page.locator('[name="extra"]');
   await expect(extraHome).toHaveCount(0);
-
-
 });
 
-
-
 test('prefetching works', async ({ page }) => {
-
   await page.goto('/');
   let preAbout = page.locator('link[href="/about"]');
-  await expect(preAbout).toHaveCount(1)
+  await expect(preAbout).toHaveCount(1);
 
   const about = page.locator('#about');
   await about.click();
 
   const homePre = page.locator('link[href="/"]');
-  await expect(homePre).toHaveCount(1)
+  await expect(homePre).toHaveCount(1);
 
   let testPre = page.locator('link[href="/test"]');
-  await expect(testPre).toHaveCount(0)
+  await expect(testPre).toHaveCount(0);
 
   // Validate intersection observer works
   const heading = page.locator('#chapter');
   await heading.click();
 
   testPre = page.locator('link[href="/test"]');
-  await expect(testPre).toHaveCount(1)
+  await expect(testPre).toHaveCount(1);
 
   // ensure no duplicates
   preAbout = page.locator('link[href="/about"]');
-  await expect(preAbout).toHaveCount(1)
-
-
+  await expect(preAbout).toHaveCount(1);
 });

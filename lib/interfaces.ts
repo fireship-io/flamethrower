@@ -30,3 +30,11 @@ export type FetchProgressEvent = {
   /** Number of bytes total (Content-Length header) */
   length: number;
 };
+
+export type RouterQuery = {
+  [x: string]: string;
+};
+
+export type NavigationOptions = {
+  query: RouterQuery;
+};
