@@ -64,13 +64,14 @@ Scripts in `<body>` will run on every page change, but you can force scripts in 
 ```
 
 The fetch-progress event is a custom event, so usage will look something like this:
+
 ```js
 window.addEventListener('flamethrower:router:fetch-progress', ({ detail }) => {
-	const progressBar = document.getElementById('progress-bar');
-	// progress & length will be 0 if there is no Content-Length header
-	const bytesReceived = detail.received; // number
-	const length = detail.length; // number
-	progressBar.style.width = detail.progress + '%';
+  const progressBar = document.getElementById('progress-bar');
+  // progress & length will be 0 if there is no Content-Length header
+  const bytesReceived = detail.received; // number
+  const length = detail.length; // number
+  progressBar.style.width = detail.progress + '%';
 });
 ```
 
@@ -83,6 +84,40 @@ Prefecthing is disabled by default.
 
 ```js
 const router = flamethrower({ prefetch: 'visible' });
+```
+
+### Working with url queries
+
+#### Getting queries
+
+You can also get router query
+
+```js
+const router = flamethrower();
+
+// getting query from '/query?foo=bar&id=4'
+const myQueries = router.query;
+console.log(myQueries); // outputs { foo: 'bar', id: 4 }
+```
+
+#### Passing queries
+
+You can pass query to url to navigate to
+
+```js
+const router = flamethrower();
+
+// navigating to '/query?foo=bar&id=4'
+router.go('/query', {
+  foo: 'bar',
+  id: 4,
+});
+```
+
+`NOTE` You don't need to call `router.go(...)` when you used anchor tags in html. Flamethrower will automatically detect url and queries
+
+```html
+<a href="/query?foo=bar&id=4">Query Page</a>
 ```
 
 ### Misc

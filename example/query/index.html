@@ -1,96 +1,102 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="icon" href="../favicon.ico" type="image/png" />
-    <meta name="description" content="The About Page" />
-    <meta name="extra" content="test" />
-    <title>About</title>
-    <script defer type="module">
-      import flamethrower from '/flamethrower.js';
-      flamethrower({ prefetch: 'visible', log: true, pageTransitions: true });
-    </script>
-    <script defer src="/query.js"></script>
 
-    <style>
-      #heading {
-        color: blue;
-      }
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" href="../favicon.ico" type="image/png" />
+  <meta name="description" content="The About Page" />
+  <meta name="extra" content="test" />
+  <title>Query</title>
+  <script defer type="module">
+    import flamethrower from '/flamethrower.js';
+    flamethrower( { prefetch: 'visible', log: true, pageTransitions: true } );
+  </script>
 
-      #load-bar {
-        background-color: blue;
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 0;
-        height: 5px;
-      }
+  <style>
+    #heading {
+      color: blue;
+    }
 
-      #contents {
-        width: 100%;
-        margin-top: 15px;
-        padding: 4px;
-        border: 2px solid blue;
-      }
-    </style>
-  </head>
+    #load-bar {
+      background-color: blue;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 0;
+      height: 5px;
+    }
 
-  <body>
-    <div id="load-bar"></div>
-    <h1 id="heading">Query Example</h1>
-    <a href="/">Home</a> | <a href="#chapter">Heading</a> | <a href="https://google.com">External</a> |
-    <button id="go">Go</button>
-    <button id="back">Back</button>
+    #contents {
+      width: 100%;
+      margin-top: 15px;
+      padding: 4px;
+      border: 2px solid blue;
+    }
+  </style>
+</head>
 
-    <h3>Popular Javascript frameworks and libraries</h3>
-    <div class="">
-      <li>
-        <button id="react">React</button>
-        <button id="angular">Angular</button>
-        <button id="vue">Vue</button>
-      </li>
-      <h3>WIth a tags</h3>
-      <li>
-        <a href="/query?lib=react">React</a>
-        <a href="/query?lib=angular">Angular</a>
-        <a href="/query?lib=vue">Vue</a>
-      </li>
-    </div>
-    <div id="contents">
-      <h1 id="cont"></h1>
-    </div>
+<body>
+  <div id="load-bar"></div>
+  <a href="/">Home</a> | <button id="go">Go</button>
+  <button id="back">Back</button>
+  <h1 id="heading">Query Example</h1>
 
-    <script type="module">
-      const router = window.flamethrower;
-      document.getElementById('go').onclick = () => {
-        router.go('/');
-      };
+  <h3>Popular Javascript frameworks and libraries</h3>
+  <div class="">
+    <li>
+      <button id="react">React</button>
+      <button id="angular">Angular</button>
+      <button id="vue">Vue</button>
+    </li>
+    <h3>WIth a tags</h3>
+    <li>
+      <a href="/query?lib=react">React</a>
+      <a href="/query?lib=angular">Angular</a>
+      <a href="/query?lib=vue">Vue</a>
+    </li>
+  </div>
+  <div id="contents">
+    <h1 id="cont"></h1>
+  </div>
 
-      document.getElementById('back').onclick = () => router.back();
-      console.log('query', router.query);
+  <script type="module">
+    const router = window.flamethrower;
+    document.getElementById( 'go' ).onclick = () => {
+      router.go( '/' );
+    };
 
-      document.getElementById('react').onclick = () =>
-        router.go('/query', {
-          query: {
-            lib: 'react',
-          },
-        });
-      document.getElementById('angular').onclick = () =>
-        router.go('/query', {
-          query: {
-            lib: 'angular',
-          },
-        });
-      document.getElementById('vue').onclick = () =>
-        router.go('/query', {
-          query: {
-            lib: 'vue',
-          },
-        });
+    document.getElementById( 'back' ).onclick = () => router.back();
+    console.log( 'query', router.query );
 
-      document.getElementById('cont').textContent = router.query.lib;
-    </script>
-  </body>
+    document.getElementById( 'react' ).onclick = () =>
+      router.go( '/query', {
+        query: {
+          lib: 'react',
+        },
+      } );
+    document.getElementById( 'angular' ).onclick = () =>
+      router.go( '/query', {
+        query: {
+          lib: 'angular',
+        },
+      } );
+    document.getElementById( 'vue' ).onclick = () =>
+      router.go( '/query', {
+        query: {
+          lib: 'vue',
+        },
+      } );
+
+    document.getElementById( 'cont' ).textContent = router.query.lib;
+    
+    // show loader
+    window.addEventListener( 'flamethrower:router:fetch-progress', ( { detail } ) => {
+        const loadBar = document.getElementById( 'load-bar' );
+        loadBar.style.width = detail.progress + '%';
+      } );
+  </script>
+</body>
+
 </html>

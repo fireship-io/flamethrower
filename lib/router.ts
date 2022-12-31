@@ -35,8 +35,9 @@ export class Router {
    */
   public go(path: string, options?: NavigationOptions): Promise<boolean> {
     const prev = window.location.href;
-    const query = options?.query ? parseQueryToString(options.query) : '';
-    const newPath = `${path}?${query}`;
+    const keys = Object.keys(options?.query ?? {});
+    const query = keys.length !== 0 ? `?${parseQueryToString(options.query)}` : '';
+    const newPath = path + query;
     const next = new URL(newPath, location.origin).href;
     return this.reconstructDOM({ type: 'go', next, prev });
   }
