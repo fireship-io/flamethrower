@@ -76,10 +76,11 @@ window.addEventListener('flamethrower:router:fetch-progress', ({ detail }) => {
 
 ### Prefetching
 
-Prefecthing is disabled by default.
+Prefetching is disabled by default.
 
 - `visible`: prefetch visible links on the page with IntersectionObserver
 - `hover`: prefetch links on hover
+- `down`: prefetch links on mousedown
 
 ```js
 const router = flamethrower({ prefetch: 'visible' });

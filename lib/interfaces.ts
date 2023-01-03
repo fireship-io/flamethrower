@@ -9,7 +9,7 @@ export interface FlamethrowerOptions {
    * undefined: no prefetching
    * @default undefined
    */
-  prefetch?: 'visible' | 'hover';
+  prefetch?: 'visible' | 'hover' | 'down';
   pageTransitions?: boolean;
 }
 

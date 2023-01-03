@@ -74,7 +74,10 @@ export class Router {
       this.prefetchVisible();
     } else if (this.opts.prefetch === 'hover') {
       this.prefetchOnHover();
-    } else {
+    } else if (this.opts.prefetch === 'down') {
+      this.prefetchOnDown();
+    }
+    else {
       return;
     }
   }
@@ -87,6 +90,16 @@ export class Router {
       const url = node.getAttribute('href');
       // Using `pointerenter` instead of `mouseenter` to support touch devices hover behavior, PS: `pointerenter` event fires only once
       node.addEventListener('pointerenter', () => this.createLink(url), { once: true });
+    });
+  }
+
+  /**
+   *  Finds links on page and prefetches them on mousedown
+   */
+  private prefetchOnDown(): void {
+    this.allLinks.forEach((node) => {
+      const url = node.getAttribute('href');
+      node.addEventListener('pointerdown', () => this.createLink(url), { once: true });
     });
   }
 
