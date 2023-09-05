@@ -16,7 +16,7 @@ Rather than requiring a frontend framework to take control of the entire DOM, th
 2. Intercepts click and popstate events, then updates the HTML5 history on route changes.
 3. Uses `fetch` to get the next page, swaps the `<body>` out, merges the `<head>`, but does not re-execute head scripts (unless asked to).
 
-This means you can have long-lived JavaScript behaviors between navigations. It works especially well with native web components.
+This means you can have long-lived JavaScript behaviours between navigations. It works especially well with native web components.
 
 ## QuickStart
 
@@ -76,7 +76,7 @@ window.addEventListener('flamethrower:router:fetch-progress', ({ detail }) => {
 
 ### Prefetching
 
-Prefecthing is disabled by default.
+Prefetching is disabled by default.
 
 - `visible`: prefetch visible links on the page with IntersectionObserver
 - `hover`: prefetch links on hover
