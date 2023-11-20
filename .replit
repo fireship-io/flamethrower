@@ -1,4 +1,4 @@
-run = "npm run start"
+run = "npm run build; npm run serve"
 hidden = [".config", "package-lock.json", "tsconfig.json"]
 
 [packager]
