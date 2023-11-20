@@ -16,11 +16,12 @@ export class Router {
     this.opts = { ...defaultOpts, ...(opts ?? {}) };
 
     if (window?.history) {
-      document.addEventListener('click', (e) => this.onClick(e));
-      window.addEventListener('popstate', (e) => this.onPop(e));
+      // Remember folks; JS will always pass in without the need of making arrow var.
+      document.addEventListener('click', this.onClick);
+      window.addEventListener('popstate', this.onPop);
       this.prefetch();
     } else {
-      console.warn('flamethrower router not supported in this browser or environment');
+      console.warn('Flamethrower router is not supported in this Browser or Environment');
       this.enabled = false;
     }
   }
@@ -74,8 +75,6 @@ export class Router {
       this.prefetchVisible();
     } else if (this.opts.prefetch === 'hover') {
       this.prefetchOnHover();
-    } else {
-      return;
     }
   }
 
@@ -105,15 +104,14 @@ export class Router {
         entries.forEach((entry) => {
           const url = entry.target.getAttribute('href');
 
-          if (this.prefetched.has(url)) {
+          if (this.prefetched.has(url) || entry.isIntersecting) {
+            // Please nest guys...
+            entry.isIntersecting && this.createLink(url);
+
             observer.unobserve(entry.target);
             return;
           }
 
-          if (entry.isIntersecting) {
-            this.createLink(url);
-            observer.unobserve(entry.target);
-          }
         });
       }, intersectionOpts);
       this.allLinks.forEach((node) => this.observer.observe(node));
@@ -164,9 +162,10 @@ export class Router {
       return;
     }
 
-    try {
-      this.log('⚡', type);
+    // Does not need to be tried; should be type string, otherwise no log?
+    this.log('⚡', type);
 
+    try {
       // Check type && window href destination
       // Disqualify if fetching same URL
       if (['popstate', 'link', 'go'].includes(type) && next !== prev) {
@@ -190,13 +189,15 @@ export class Router {
             return new ReadableStream({
               start(controller) {
                 // The following function handles each data chunk
-                function push() {
+
+                // Spc - Void, because why the f*** is it not?
+                void function push() {
                   // "done" is a Boolean and value a "Uint8Array"
                   reader.read().then(({ done, value }) => {
                     // If there is no more data to read
                     if (done) {
-                      controller.close();
-                      return;
+                      // Spc - Since we have a *VOID*, why the hell we not keeping lines to the minimum???  
+                      return controller.close();
                     }
 
                     bytesReceived += value.length;
@@ -215,9 +216,8 @@ export class Router {
                     // Check chunks by logging to the console
                     push();
                   });
-                }
-
-                push();
+                }()
+                
               },
             });
           })
@@ -257,7 +257,7 @@ export class Router {
     } catch (err) {
       window.dispatchEvent(new CustomEvent('flamethrower:router:error', err));
       this.opts.log && console.timeEnd('⏱️');
-      console.error('💥 router fetch failed', err);
+      console.error('💥 Router fetch failed', err);
       return false;
     }
   }

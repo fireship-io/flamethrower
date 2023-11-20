@@ -32,53 +32,33 @@ export function mergeHead(nextDoc: Document): void {
   // Update head
   // Head elements that changed on next document
   const getValidNodes = (doc: Document): Element[] => Array.from(doc.querySelectorAll('head>:not([rel="prefetch"]'));
-  const oldNodes = getValidNodes(document);
-  const nextNodes = getValidNodes(nextDoc);
-  const { staleNodes, freshNodes } = partitionNodes(oldNodes, nextNodes);
+  // Spc - Ofc, we simple;
+  const { staleNodes, freshNodes } = partitionNodes(
+    getValidNodes(document),
+    getValidNodes(nextDoc)
+  );
 
   staleNodes.forEach((node) => node.remove());
 
   document.head.append(...freshNodes);
 }
 
-function partitionNodes(oldNodes: Element[], nextNodes: Element[]): PartitionedNodes {
-  const staleNodes: Element[] = [];
-  const freshNodes: Element[] = [];
-  let oldMark = 0;
-  let nextMark = 0;
-  while (oldMark < oldNodes.length || nextMark < nextNodes.length) {
-    const old = oldNodes[oldMark];
-    const next = nextNodes[nextMark];
-    if (old?.isEqualNode(next)) {
-      oldMark++;
-      nextMark++;
-      continue;
-    }
-    const oldInFresh = old ? freshNodes.findIndex((node) => node.isEqualNode(old)) : -1;
-    if (oldInFresh !== -1) {
-      freshNodes.splice(oldInFresh, 1);
-      oldMark++;
-      continue;
-    }
-    const nextInStale = next ? staleNodes.findIndex((node) => node.isEqualNode(next)) : -1;
-    if (nextInStale !== -1) {
-      staleNodes.splice(nextInStale, 1);
-      nextMark++;
-      continue;
-    }
-    old && staleNodes.push(old);
-    next && freshNodes.push(next);
-    oldMark++;
-    nextMark++;
-  }
-
-  return { staleNodes, freshNodes };
-}
-
+// Spc - Move type above only use...
 type PartitionedNodes = {
   freshNodes: Element[];
   staleNodes: Element[];
 };
+
+function partitionNodes(oldNodes: Element[], nextNodes: Element[]): PartitionedNodes {
+  // Spc - Holy Jesus...
+  const oldNodeSet = new Set(oldNodes);
+  const nextNodeSet = new Set(nextNodes);
+
+  const staleNodes = oldNodes.filter(node => !nextNodeSet.has(node));
+  const freshNodes = nextNodes.filter(node => !oldNodeSet.has(node));
+
+  return { staleNodes, freshNodes };
+}
 
 /**
  * Runs JS in the fetched document
