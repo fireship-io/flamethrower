@@ -19,10 +19,11 @@ export class Router {
       document.addEventListener('click', (e) => this.onClick(e));
       window.addEventListener('popstate', (e) => this.onPop(e));
       this.prefetch();
-    } else {
-      console.warn('flamethrower router not supported in this browser or environment');
-      this.enabled = false;
+      return;
     }
+
+    console.warn('Flamethrower router is not supported in this Browser or Environment');
+    this.enabled = false;
   }
 
   /**
@@ -74,8 +75,6 @@ export class Router {
       this.prefetchVisible();
     } else if (this.opts.prefetch === 'hover') {
       this.prefetchOnHover();
-    } else {
-      return;
     }
   }
 
@@ -105,15 +104,14 @@ export class Router {
         entries.forEach((entry) => {
           const url = entry.target.getAttribute('href');
 
-          if (this.prefetched.has(url)) {
+          if (this.prefetched.has(url) || entry.isIntersecting) {
+            // Spc - Please nest guys...
+            entry.isIntersecting && this.createLink(url);
+
             observer.unobserve(entry.target);
             return;
           }
 
-          if (entry.isIntersecting) {
-            this.createLink(url);
-            observer.unobserve(entry.target);
-          }
         });
       }, intersectionOpts);
       this.allLinks.forEach((node) => this.observer.observe(node));
@@ -125,13 +123,13 @@ export class Router {
    * Create a link to prefetch
    */
   private createLink(url: string): void {
-    const linkEl = document.createElement('link');
-    linkEl.rel = 'prefetch';
-    linkEl.href = url;
-    linkEl.as = 'document';
-
-    linkEl.onload = () => this.log('🌩️ prefetched', url);
-    linkEl.onerror = (err) => this.log('🤕 can\'t prefetch', url, err);
+    const linkEl = Object.assign(document.createElement('link'), {
+      rel: 'prefetch',
+      href: url,
+      as: 'document',
+      onload: () => this.log('🌩️ prefetched', url),
+      onerror: (err) => this.log('🤕 can\'t prefetch', url, err),
+    });
 
     document.head.appendChild(linkEl);
 
@@ -143,7 +141,8 @@ export class Router {
    * @param  {MouseEvent} e
    * Handle clicks on links
    */
-  private onClick(e: MouseEvent): void {
+  onClick(e: MouseEvent): void {
+    console.log(e, this, 'asd');
     this.reconstructDOM(handleLinkClick(e));
   }
 
@@ -151,7 +150,8 @@ export class Router {
    * @param  {PopStateEvent} e
    * Handle popstate events like back/forward
    */
-  private onPop(e: PopStateEvent): void {
+  onPop(e: PopStateEvent): void {
+    console.log(e, this, 'asd');
     this.reconstructDOM(handlePopState(e));
   }
   /**
@@ -164,9 +164,10 @@ export class Router {
       return;
     }
 
-    try {
-      this.log('⚡', type);
+    // Does not need to be tried; should be type string, otherwise no log?
+    this.log('⚡', type);
 
+    try {
       // Check type && window href destination
       // Disqualify if fetching same URL
       if (['popstate', 'link', 'go'].includes(type) && next !== prev) {
@@ -180,48 +181,37 @@ export class Router {
         }
 
         // Fetch next document
-        const res = await fetch(next, { headers: { 'X-Flamethrower': '1' } })
-          .then((res) => {
-            const reader = res.body.getReader();
-            const length = parseInt(res.headers.get('Content-Length'));
-            let bytesReceived = 0;
+        const response = await fetch(next, { headers: { 'X-Flamethrower': '1' } });
+        const reader = response.body.getReader();
+        const length = parseInt(response.headers.get('Content-Length') || '0', 10);
+        
+        let bytesReceived = 0;
+        // take each received chunk and emit an event, pass through to new stream which will be read as text
+        const stream = new ReadableStream({
+          start(controller) {
+            void async function push() {
+              const { done, value } = await reader.read();
+              if (done) {
+                controller.close();
+                return;
+              }
+              bytesReceived += value.length;
+              window.dispatchEvent(
+                new CustomEvent<FetchProgressEvent>('flamethrower:router:fetch-progress', {
+                  detail: {
+                    progress: Number.isNaN(length) ? 0 : (bytesReceived / length) * 100,
+                    received: bytesReceived,
+                    length: length || 0,
+                  },
+                }),
+              );
+              controller.enqueue(value);
+              await push();
+            }();
+          },
+        });
 
-            // take each received chunk and emit an event, pass through to new stream which will be read as text
-            return new ReadableStream({
-              start(controller) {
-                // The following function handles each data chunk
-                function push() {
-                  // "done" is a Boolean and value a "Uint8Array"
-                  reader.read().then(({ done, value }) => {
-                    // If there is no more data to read
-                    if (done) {
-                      controller.close();
-                      return;
-                    }
-
-                    bytesReceived += value.length;
-                    window.dispatchEvent(
-                      new CustomEvent<FetchProgressEvent>('flamethrower:router:fetch-progress', {
-                        detail: {
-                          // length may be NaN if no Content-Length header was found
-                          progress: Number.isNaN(length) ? 0 : (bytesReceived / length) * 100,
-                          received: bytesReceived,
-                          length: length || 0,
-                        },
-                      }),
-                    );
-                    // Get the data and send it to the browser via the controller
-                    controller.enqueue(value);
-                    // Check chunks by logging to the console
-                    push();
-                  });
-                }
-
-                push();
-              },
-            });
-          })
-          .then((stream) => new Response(stream, { headers: { 'Content-Type': 'text/html' } }));
+        const res = new Response(stream, { headers: { 'Content-Type': 'text/html' } });
 
         const html = await res.text();
         const nextDoc = formatNextDocument(html);
@@ -231,19 +221,18 @@ export class Router {
 
         // Merge BODY
         // with optional native browser page transitions
-        if (this.opts.pageTransitions && (document as any).createDocumentTransition) {
-          const transition = (document as any).createDocumentTransition();
-          transition.start(() => {
-            replaceBody(nextDoc);
-            runScripts();
-            scrollTo(type, scrollId);
-          });
-        } else {
+        const handleMerge = () => {
           replaceBody(nextDoc);
           runScripts();
           scrollTo(type, scrollId);
         }
 
+        if (this.opts.pageTransitions && (document as any).createDocumentTransition) {
+          const transition = (document as any).createDocumentTransition();
+          transition.start(handleMerge);
+        } else {
+          handleMerge();
+        }
 
         window.dispatchEvent(new CustomEvent('flamethrower:router:end'));
 
@@ -257,7 +246,7 @@ export class Router {
     } catch (err) {
       window.dispatchEvent(new CustomEvent('flamethrower:router:error', err));
       this.opts.log && console.timeEnd('⏱️');
-      console.error('💥 router fetch failed', err);
+      console.error('💥 Router fetch failed', err);
       return false;
     }
   }

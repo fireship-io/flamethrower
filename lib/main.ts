@@ -10,9 +10,7 @@ export default (opts?: FlamethrowerOptions): Router => {
   const router = new Router(opts);
   // eslint-disable-next-line no-console
   opts.log && console.log('🔥 flamethrower engaged');
-  if (window) {
-    const flame = window as FlameWindow;
-    flame.flamethrower = router;
-  }
+  
+  globalThis?.window && ((window as FlameWindow).flamethrower = router);
   return router;
 };

@@ -9,10 +9,12 @@ export function scrollTo(type: string, id?: string): void {
   if (['link', 'go'].includes(type)) {
     if (id) {
       const el = document.querySelector(id);
-      el ? el.scrollIntoView({ behavior: 'smooth', block: 'start' }) : window.scrollTo({ top: 0 });
-    } else {
-      window.scrollTo({ top: 0 });
-    }
+      el && el.scrollIntoView({ behavior: 'smooth', block: 'start' })
+      return;
+    } 
+
+    // Spc - Remove redundant Block
+    window.scrollTo({ top: 0 });
   }
 }
 /**
