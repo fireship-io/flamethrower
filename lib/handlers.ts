@@ -92,18 +92,18 @@ export function handleLinkClick(e: MouseEvent): RouteChangeData {
     // Start router takeover
     e.preventDefault();
 
+    // ID to scroll to after navigation, like /route/#some-id
+    const scrollId = ahref.match(/#([\w'-]+)\b/g)?.[0];
+    const next = fullURL(url.href);
+    const prev = fullURL();
+    addToPushState(next);
+
     // If anchor, scroll,
     if (ahref?.startsWith('#')) {
       scrollToAnchor(ahref);
       return { type: 'scrolled' };
     }
 
-    // ID to scroll to after navigation, like /route/#some-id
-    const scrollId = ahref.match(/#([\w'-]+)\b/g)?.[0];
-    const next = fullURL(url.href);
-    const prev = fullURL();
-
-    // addToPushState(next);
     return { type: 'link', next, prev, scrollId };
   } else {
     return { type: 'noop' };
